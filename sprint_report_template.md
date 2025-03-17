@@ -30,7 +30,7 @@ Here are links to the issues we completed in this sprint:
 * [Issue #1: User Login & Registration](https://github.com/UndyingLite/CPTS322/issues/1)
 * [Issue #2: AI Destination Suggestion (MVP)](https://github.com/UndyingLite/CPTS322/issues/2)
 * [Issue #3: Database Integration for User Profiles](https://github.com/UndyingLite/CPTS322/issues/4)
-* [Issue #4: Password Reset Email]([https://github.com/UndyingLite/CPTS322/issues/5)
+* [Issue #4: Password Reset Email](https://github.com/UndyingLite/CPTS322/issues/5))
 
 ---
 
