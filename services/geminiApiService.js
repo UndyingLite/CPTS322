@@ -11,7 +11,7 @@ const geminiApiService = {
   getDestinationSuggestions: async (preferences) => {
     try {
       // API key
-      const apiKey = "AIzaSyAsvh-yp3ifMnuV0HOV4m-3BmramZXc6rU";
+      const apiKey = "";
       
       // Construct the prompt for Gemini
       const prompt = `I'm looking for travel destination suggestions with the following preferences:
