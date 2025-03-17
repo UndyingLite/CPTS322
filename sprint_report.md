@@ -1,6 +1,6 @@
 # Sprint 1 Report
 
-**Video Link**: [Unlisted YouTube Demo](https://youtu.be/your-demo-link-here)
+**Video Link**: 
 
 ---
 
@@ -26,26 +26,23 @@ We anticipated adding a password-reset email service but did not complete it. We
 ## Completed Issues/User Stories
 Here are links to the issues we completed in this sprint:
 
-* [Issue #1: User Login & Registration](https://github.com/your_repo/issues/1)
-* [Issue #2: AI Destination Suggestion (MVP)](https://github.com/your_repo/issues/2)
-* [Issue #3: Database Integration for User Profiles](https://github.com/your_repo/issues/3)
+* [Issue #1: User Login & Registration]([https://github.com/your_repo/issues/1](https://github.com/UndyingLite/CPTS322/issues/1)
+* [Issue #2: AI Destination Suggestion (MVP)]([https://github.com/your_repo/issues/2](https://github.com/UndyingLite/CPTS322/issues/2)
+* [Issue #3: Database Integration for User Profiles]([https://github.com/your_repo/issues/3](https://github.com/UndyingLite/CPTS322/issues/4)
+* * [Issue #4: Password Reset Email](https://github.com/UndyingLite/CPTS322/issues/5)
 
 ---
 
 ## Incomplete Issues/User Stories
 Here are the issues we worked on but did not complete:
 
-* [Issue #4: Password Reset Email](https://github.com/your_repo/issues/4) – **Reason**: We ran out of time and needed more research on secure email sending services.
+* [Issue #4: Password Reset Email]([https://github.com/your_repo/issues/4](https://github.com/UndyingLite/CPTS322/issues/5)) – **Reason**: We ran out of time and needed more research on secure email sending services.
 
 ---
 
 ## Code Files for Review
 Please review the following code files, which were actively developed during this sprint, for quality:
 
-* [auth.py (Back-End Authentication Logic)](https://github.com/your_repo/path/to/auth.py)
-* [ai_suggestions.py (AI Integration)](https://github.com/your_repo/path/to/ai_suggestions.py)
-* [database.py (Database Models/Connection)](https://github.com/your_repo/path/to/database.py)
-* [App.js (Front-End UI for Login)](https://github.com/your_repo/path/to/App.js)
 
 ---
 
