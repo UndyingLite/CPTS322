@@ -7,7 +7,8 @@
 ## What's New (User Facing)
 * **Feature 1**: Basic User Registration and Login  
 * **Feature 2**: AI Destination Suggestion (MVP)  
-* **Feature 3**: Database Integration for User Profiles  
+* **Feature 3**: Database Integration for User Profiles
+* **Feature 4**: Password Reset Email
 
 ---
 
@@ -26,17 +27,17 @@ We anticipated adding a password-reset email service but did not complete it. We
 ## Completed Issues/User Stories
 Here are links to the issues we completed in this sprint:
 
-* [Issue #1: User Login & Registration]([https://github.com/your_repo/issues/1](https://github.com/UndyingLite/CPTS322/issues/1)
-* [Issue #2: AI Destination Suggestion (MVP)]([https://github.com/your_repo/issues/2](https://github.com/UndyingLite/CPTS322/issues/2)
-* [Issue #3: Database Integration for User Profiles]([https://github.com/your_repo/issues/3](https://github.com/UndyingLite/CPTS322/issues/4)
-* * [Issue #4: Password Reset Email](https://github.com/UndyingLite/CPTS322/issues/5)
+* [Issue #1: User Login & Registration](https://github.com/UndyingLite/CPTS322/issues/1)
+* [Issue #2: AI Destination Suggestion (MVP)](https://github.com/UndyingLite/CPTS322/issues/2)
+* [Issue #3: Database Integration for User Profiles](https://github.com/UndyingLite/CPTS322/issues/4)
+* [Issue #4: Password Reset Email]([https://github.com/UndyingLite/CPTS322/issues/5)
 
 ---
 
 ## Incomplete Issues/User Stories
 Here are the issues we worked on but did not complete:
 
-* [Issue #4: Password Reset Email]([https://github.com/your_repo/issues/4](https://github.com/UndyingLite/CPTS322/issues/5)) – **Reason**: We ran out of time and needed more research on secure email sending services.
+* [Issue #4: Password Reset Email](https://github.com/UndyingLite/CPTS322/issues/5)) – **Reason**: We ran out of time and needed more research on secure email sending services.
 
 ---
 
