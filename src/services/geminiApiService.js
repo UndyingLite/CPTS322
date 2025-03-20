@@ -11,39 +11,36 @@ const geminiApiService = {
   getDestinationSuggestions: async (preferences) => {
     try {
       // API key
-      const apiKey = "";
+      const apiKey = "AIzaSyAsvh-yp3ifMnuV0HOV4m-3BmramZXc6rU";
       
       // Construct the prompt for Gemini
-      const prompt = `I'm looking for travel destination suggestions with the following preferences:
-      - Budget: ${preferences.budget || 'Not specified'}
-      - Trip Duration: ${preferences.duration || 'Not specified'} days
-      - Interests: ${preferences.interests || 'Not specified'}
-      - Preferred Climate: ${preferences.climate || 'Not specified'}
-      - Travel Style: ${preferences.travelStyle || 'Not specified'}
-      - Places I've already visited: ${preferences.previousDestinations || 'None mentioned'}
-      
-      Please suggest 3 destinations that would be a good match, including:
-      1. Destination name
-      2. Brief description
-      3. Key attractions (3 or more)
-      4. Best time to visit
-      5. Estimated daily budget
-      
+      const prompt = `Create a detailed travel itinerary for a trip to ${preferences.destination} from ${preferences.startDate} to ${preferences.endDate}, with a budget of ${preferences.budget}. The user is interested in ${preferences.interests}.
+
+      The itinerary should include a list of activities for each day, including specific landmarks, restaurants, and other attractions. Please provide estimated costs for each activity.
+
       Format your response ONLY as JSON with the following structure, and nothing else:
       {
-        "destinations": [
+        "destination": "${preferences.destination}",
+        "startDate": "${preferences.startDate}",
+        "endDate": "${preferences.endDate}",
+        "budget": "${preferences.budget}",
+        "interests": "${preferences.interests}",
+        "itinerary": [
           {
-            "name": "Destination name",
-            "description": "Brief description",
-            "attractions": ["Attraction 1", "Attraction 2", "Attraction 3"],
-            "bestTimeToVisit": "Best time to visit",
-            "estimatedDailyBudget": "Estimated daily budget in USD"
+            "day": "Day 1",
+            "activities": [
+              {
+                "description": "Activity description",
+                "estimatedCost": "Estimated cost in USD"
+              }
+            ]
           }
         ]
       }`;
       
       // Make API call to Gemini
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+      // TODO: The model 'gemini-2.0-pro-exp-02-05' is experimental. Consider switching to a stable model for production.
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro-exp-02-05:generateContent?key=${apiKey}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -60,7 +57,7 @@ const geminiApiService = {
           ],
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 1000
+            maxOutputTokens: 2000
           }
         })
       });
@@ -71,13 +68,23 @@ const geminiApiService = {
       }
       
       const data = await response.json();
+      console.log("Gemini API Response:", data);
       
       // Extract the content from Gemini's response
       const responseText = data.candidates[0].content.parts[0].text;
-      
+
+      // Log the raw response text for debugging
+      console.log("Raw Gemini API Response Text:", responseText);
+
+      // Attempt to fix common JSON errors (missing commas)
+      let fixedResponseText = responseText.replace(
+        /}\s*{/g,
+        '},{'
+      );
+
       // Look for JSON in the response
-      const jsonMatch = responseText.match(/```json\n([\s\S]*)\n```/) || 
-                         responseText.match(/({[\s\S]*})/);
+      const jsonMatch = fixedResponseText.match(/```json\n([\s\S]*)\n```/) || 
+                         fixedResponseText.match(/({[\s\S]*})/);
                          
       let parsedData;
       if (jsonMatch && jsonMatch[1]) {
@@ -85,7 +92,7 @@ const geminiApiService = {
       } else {
         // Try parsing the entire response as JSON
         try {
-          parsedData = JSON.parse(responseText);
+          parsedData = JSON.parse(fixedResponseText);
         } catch (error) {
           throw new Error('Failed to parse JSON response from Gemini');
         }

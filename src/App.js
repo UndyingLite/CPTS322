@@ -3,7 +3,7 @@ import './App.css';
 import ProfileForm from './components/ProfileForm';
 import PreferencesForm from './components/PreferencesForm';
 import ItineraryDisplay from './components/ItineraryDisplay';
-import ChatBox from './components/ChatBox'; // This must match the file name and export
+import geminiApiService from './services/geminiApiService';
 
 function App() {
   const [step, setStep] = useState(() => localStorage.getItem('step') || 'profile');
@@ -21,14 +21,16 @@ function App() {
     setStep('preferences');
   };
 
-  const handlePreferencesSubmit = (prefsData) => {
-    const mockItinerary = {
-      destination: prefsData.destination,
-      activities: [`Visit ${prefsData.destination} landmark`, 'Try local food', 'Relax at a park'],
-      budget: prefsData.budget,
-    };
-    setItinerary(mockItinerary);
-    setStep('itinerary');
+  const handlePreferencesSubmit = async (prefsData) => {
+    try {
+      const geminiItinerary = await geminiApiService.getDestinationSuggestions(prefsData);
+      console.log("Gemini Itinerary:", geminiItinerary);
+      setItinerary(geminiItinerary);
+      setStep('itinerary');
+    } catch (error) {
+      console.error("Error fetching itinerary from Gemini:", error.message);
+      // Handle error appropriately, e.g., display an error message to the user
+    }
   };
 
   const handleNewTrip = () => {
@@ -57,7 +59,6 @@ function App() {
       {step === 'itinerary' && (
         <>
           <ItineraryDisplay itinerary={itinerary} onNewTrip={handleNewTrip} />
-          <ChatBox destination={itinerary.destination} />
         </>
       )}
     </div>
