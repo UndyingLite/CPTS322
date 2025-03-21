@@ -11,7 +11,7 @@ const geminiApiService = {
   getDestinationSuggestions: async (preferences) => {
     try {
       // API key
-      const apiKey = "AIzaSyAsvh-yp3ifMnuV0HOV4m-3BmramZXc6rU";
+      const apiKey = "enterapikey";
       
       // Construct the prompt for Gemini
       const prompt = `Create a detailed travel itinerary for a trip to ${preferences.destination} from ${preferences.startDate} to ${preferences.endDate}, with a budget of ${preferences.budget}. The user is interested in ${preferences.interests}.
