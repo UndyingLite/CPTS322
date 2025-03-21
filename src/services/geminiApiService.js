@@ -105,5 +105,70 @@ const geminiApiService = {
     }
   }
 };
+ // ----------------------------------------------------
+  // getChatResponse
+  // ----------------------------------------------------
+  /**
+   * Get a short travel-related chat response from Gemini
+   *
+   * @param {string} userMessage The user's text input
+   * @returns {Promise<string>} The AI-generated text
+   */
+  getChatResponse: async (userMessage) => {
+    try {
+      const apiKey = "enterapikey";
+
+      // Customize this prompt as needed
+      // We'll ask for a single travel suggestion
+      const prompt = `The user wants a travel suggestion. They say: "${userMessage}"
+      
+      Please respond with at least one travel-related recommendation. 
+      If relevant, include a budget-friendly tip or destination in your reply.
+      Format your answer as plain text.`;
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro-exp-02-05:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: prompt
+                  }
+                ]
+              }
+            ],
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 500
+            }
+          })
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Chat request failed');
+      }
+
+      const data = await response.json();
+      console.log("Gemini Chat Response:", data);
+
+      // Attempt to get text from the response
+      const responseText = data.candidates?.[0]?.content.parts?.[0]?.text;
+      if (!responseText) {
+        throw new Error('No response text found from Gemini');
+      }
+
+      return responseText.trim();
+    } catch (error) {
+      console.error('Error in getChatResponse:', error);
+      throw error;
+    }
+  }
+};
 
 export default geminiApiService;
