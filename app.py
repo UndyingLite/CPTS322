@@ -2,14 +2,14 @@ from flask import Flask, request, jsonify, session, render_template
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # Replace with a secure random key in production
+app.secret_key = 'your_secret_key_here'  #will update this later
 
-# In-memory user store for demonstration purposes.
+
 users = {}
 
 @app.route('/')
 def home():
-    return render_template('index.html')  # Renders the homepage template
+    return render_template('index.html')  
 
 @app.route('/register_form')
 def register_form():
@@ -25,7 +25,7 @@ def register():
     email = data.get('email')
     password = data.get('password')
     
-    # Basic validations
+
     if not email or not password:
         return jsonify({'error': 'Email and password are required.'}), 400
     if '@' not in email:
@@ -33,7 +33,6 @@ def register():
     if email in users:
         return jsonify({'error': 'User already exists.'}), 400
     
-    # Save user with hashed password
     users[email] = generate_password_hash(password)
     return jsonify({'message': 'User registered successfully.'}), 201
 
@@ -43,15 +42,14 @@ def login():
     email = data.get('email')
     password = data.get('password')
     
-    # Basic validations
+
     if not email or not password:
         return jsonify({'error': 'Email and password are required.'}), 400
     if email not in users:
         return jsonify({'error': 'User not found.'}), 404
     if not check_password_hash(users[email], password):
         return jsonify({'error': 'Invalid password.'}), 401
-    
-    # Set session (for demo purposes)
+
     session['user'] = email
     return jsonify({'message': 'Logged in successfully.'}), 200
 
