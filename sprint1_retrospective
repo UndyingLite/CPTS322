@@ -10,6 +10,7 @@
 ## 2. What Didn’t Go Well
 - Time estimates for AI integration were underestimated.
 - Some confusion about environment variables across different OS.
+- Insufficient testing & quality checks.
 
 ## 3. Potential Improvements
 1. **Task Breakdown**: Break large user stories into smaller tasks for more accurate estimates.
