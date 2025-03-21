@@ -14,18 +14,13 @@ Implement core foundational features so that a user can:
 
 ## Sprint Backlog Items
 
-| Backlog ID | Title / Feature               | Assigned To | Acceptance Criteria                                                                                                                                                                           | Estimate (Points) |
-|------------|-------------------------------|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
-| PB-1       | User Login & Registration    | **Kaleb**   | 1. Users can register with a valid email and password<br>2. System rejects invalid email format<br>3. On successful login, user is taken to a dashboard<br>4. Password reset link sent to user if requested | 3                 |
-| PB-2       | Destination Suggestions      | **Nick**    | 1. Users can input budget and interests<br>2. System provides at least two relevant destinations<br>3. Display a warning if no suggestions match criteria<br>4. Optional: Store destination queries/results in DB               | 5                 |
-| PB-3       | AI Chat for Travel Queries   | **Melvin**  | 1. Front-end chat interface allows text input<br>2. AI responds with at least one travel-related suggestion (e.g., budget destination)<br>3. Proper error handling if AI service is unavailable<br>4. Store conversation logs (if DB is ready) | 8                 |
-| PB-6       | Database Integration         | **Zuriel**  | 1. A relational or NoSQL DB is connected to the back-end (e.g., PostgreSQL/MongoDB/SQLite)<br>2. Database stores user profiles (from PB-1) and can store AI chat logs<br>3. Secure DB credentials via environment variables<br>4. Basic test confirming data is persisted | 3                 |
+| Backlog ID | Title / Feature               | Assigned To | Acceptance Criteria                                                                                                                                                                           | Estimate (Points) | Status    |
+|------------|-------------------------------|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|-----------|
+| PB-1       | User Login & Registration    | **Kaleb**   | 1. Users can register with a valid email and password<br>2. System rejects invalid email format<br>3. On successful login, user is taken to a dashboard<br>4. Password reset link sent if requested | 3                 | Completed |
+| PB-2       | Destination Suggestions      | **Nick**    | 1. Users can input budget and interests<br>2. System provides at least two relevant destinations<br>3. Displays a warning if no suggestions match criteria<br>4. Optionally store queries/results in DB               | 5                 | To Do     |
+| PB-3       | AI Chat for Travel Queries   | **Melvin**  | 1. Front-end chat interface allows text input<br>2. AI responds with at least one travel-related suggestion (e.g., budget destination)<br>3. Handles error if AI service is unavailable<br>4. Stores conversation logs if DB is ready | 8                 | To Do     |
+| PB-6       | Database Integration         | **Zuriel**  | 1. A relational or NoSQL DB is connected to the back-end (e.g., PostgreSQL/MongoDB/SQLite)<br>2. Database stores user profiles (from PB-1) and AI chat logs<br>3. Secure DB credentials via environment variables<br>4. Basic test confirming data persistence | 3                 | To Do     |
 
 ### Notes
-- Each item’s **priority** is assumed High or Medium (as these are core features).
-- All tasks start in the **To Do** column on the Kanban board.
+- All tasks start in the **To Do** column on the Kanban board, except those marked as Completed.
 - Each team member will move their items from **In Progress** → **Code Review** → **Testing** → **Done** as they work.
-
-
-
-
