@@ -2,7 +2,7 @@
 
 | ID   | Title/Feature                 | Description                                                      | Priority | Estimate (Points) | Status   |
 |------|-------------------------------|------------------------------------------------------------------|----------|-------------------|----------|
-| PB-1 | User Login & Registration     | Users can create accounts, log in, and reset passwords           | High     | 3                 | Backlog  |
+| PB-1 | User Login & Registration     | Users can create accounts, log in, and reset passwords           | High     | 3                 | Done  |
 | PB-2 | Destination Suggestions       | Suggest travel destinations based on budget and interests        | High     | 5                 | Backlog  |
 | PB-3 | AI Chat for Travel Queries    | AI-powered chat interface for quick Q&A about travel options     | Medium   | 8                 | Backlog  |
 | PB-4 | Itinerary Planner             | Generate day-by-day itinerary once destination is chosen         | Medium   | 5                 | Backlog  |
