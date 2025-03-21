@@ -43,6 +43,10 @@ Here are the issues we worked on but did not complete:
 
 ## Code Files for Review
 Please review the following code files, which were actively developed during this sprint, for quality:
+Please review the following code files, which were actively developed during this sprint, for quality:
+* `app.py`
+* Files in the `templates/` folder (e.g., `index.html`, `login.html`, `register.html`)
+* Files in the `static/` folder (e.g., `style.css`)
 
 
 ---
