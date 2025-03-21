@@ -18,7 +18,7 @@ function ChatInterface({ onSaveConversation }) {
     setIsLoading(true);
 
     try {
-      // 2. Call the new GetChatResponse
+      // 2. Call the new getChatResponse function in geminiApiService
       const aiReply = await geminiApiService.getChatResponse(userInput);
 
       // 3. Add AI response
@@ -32,12 +32,31 @@ function ChatInterface({ onSaveConversation }) {
     }
   };
 
-  // Save conversation (logs) to DB or local storage
-  const handleSave = () => {
-    if (onSaveConversation) {
-      onSaveConversation(messages);
-    } else {
-      console.log('No onSaveConversation prop provided. Could store to localStorage or DB here.');
+  // Save conversation (logs) to your Flask back-end
+  const handleSave = async () => {
+    if (!messages.length) return;
+
+    try {
+      // Make a POST request to a Flask endpoint
+      const response = await fetch('/save_conversation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save conversation');
+      }
+
+      // Optionally parse the response JSON
+      const data = await response.json();
+      console.log('Conversation saved:', data);
+
+      // You could show a success alert or message
+      alert('Conversation saved successfully!');
+    } catch (err) {
+      console.error('Error saving conversation:', err);
+      setError('Failed to save conversation. Please try again.');
     }
   };
 
