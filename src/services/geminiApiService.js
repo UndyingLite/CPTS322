@@ -106,7 +106,7 @@ const geminiApiService = {
   }
 };
  // ----------------------------------------------------
-  // getChatResponse
+  // GetChatResponse
   // ----------------------------------------------------
   /**
    * Get a short travel-related chat response from Gemini
@@ -118,7 +118,6 @@ const geminiApiService = {
     try {
       const apiKey = "enterapikey";
 
-      // Customize this prompt as needed
       // We'll ask for a single travel suggestion
       const prompt = `The user wants a travel suggestion. They say: "${userMessage}"
       
