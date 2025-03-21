@@ -1,6 +1,6 @@
 /* style.css */
 
-/* Import a Google Font */
+
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
 
 /* Apply the font to the entire page */
@@ -8,26 +8,26 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Open Sans', sans-serif;
-  background-color: #f5f5f5; /* Light gray background */
-  color: #333;              /* Dark text color */
+  background-color: #f5f5f5; 
+  color: #333;              
 }
 
-/* A simple container to center content */
+
 .container {
   max-width: 600px;
   margin: 40px auto;
   padding: 20px;
-  background-color: #fff; /* White background */
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
   margin-top: 0;
-  color: #007bff; /* A nice blue for headings */
+  color: #007bff;
 }
 
-/* Navigation links */
+
 nav a {
   color: #fff;
   background-color: #007bff;
@@ -40,7 +40,7 @@ nav a:hover {
   background-color: #0056b3;
 }
 
-/* Form styling */
+
 form {
   display: flex;
   flex-direction: column;
@@ -73,7 +73,7 @@ button[type="submit"]:hover {
   background-color: #0056b3;
 }
 
-/* Links for switching between forms */
+
 p a {
   color: #007bff;
   text-decoration: none;
