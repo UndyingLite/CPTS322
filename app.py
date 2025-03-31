@@ -2,9 +2,9 @@ from flask import Flask, request, session, render_template, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # Replace with a secure random key in production
+app.secret_key = 'your_secret_key_here'  # will update this later
 
-# In-memory user store for demonstration purposes.
+# In-memory user store
 users = {}
 
 @app.route('/')

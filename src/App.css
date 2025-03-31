@@ -138,3 +138,24 @@ button:disabled {
   margin-bottom: 15px;
   font-style: italic;
 }
+
+/* Chat component styles */
+
+.chat-message {
+  margin: 5px 0;
+}
+
+.chat-message.user {
+  text-align: right;
+  color: blue;
+}
+
+.chat-message.bot {
+  text-align: left;
+  color: green;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
