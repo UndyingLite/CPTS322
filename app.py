@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session, render_template
+from flask import Flask, request, session, render_template, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -9,7 +9,7 @@ users = {}
 
 @app.route('/')
 def home():
-    return render_template('index.html')  # Renders the homepage template
+    return render_template('index.html')
 
 @app.route('/register_form')
 def register_form():
@@ -21,44 +21,69 @@ def login_form():
 
 @app.route('/register', methods=['POST'])
 def register():
-    data = request.get_json() if request.is_json else request.form
+    data = request.form
     email = data.get('email')
     password = data.get('password')
-    
+
     # Basic validations
     if not email or not password:
-        return jsonify({'error': 'Email and password are required.'}), 400
+        return render_template('register.html', error="Email and password are required.")
     if '@' not in email:
-        return jsonify({'error': 'Invalid email format.'}), 400
+        return render_template('register.html', error="Invalid email format.")
     if email in users:
-        return jsonify({'error': 'User already exists.'}), 400
-    
-    # Save user with hashed password
+        return render_template('register.html', error="User already exists.")
+
     users[email] = generate_password_hash(password)
-    return jsonify({'message': 'User registered successfully.'}), 201
+    return redirect(url_for('login_form'))
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.get_json() if request.is_json else request.form
+    data = request.form
     email = data.get('email')
     password = data.get('password')
-    
+
     # Basic validations
     if not email or not password:
-        return jsonify({'error': 'Email and password are required.'}), 400
+        return render_template('login.html', error="Email and password are required.")
     if email not in users:
-        return jsonify({'error': 'User not found.'}), 404
+        return render_template('login.html', error="User not found.")
     if not check_password_hash(users[email], password):
-        return jsonify({'error': 'Invalid password.'}), 401
-    
-    # Set session (for demo purposes)
+        return render_template('login.html', error="Invalid password.")
+
     session['user'] = email
-    return jsonify({'message': 'Logged in successfully.'}), 200
+    return redirect(url_for('dashboard'))
+
+@app.route('/dashboard')
+def dashboard():
+    if 'user' not in session:
+        return redirect(url_for('login_form'))
+
+    user_email = session['user']
+    user_name = user_email.split('@')[0]
+    return render_template('dashboard.html', user_name=user_name)
 
 @app.route('/logout', methods=['GET'])
 def logout():
     session.pop('user', None)
-    return jsonify({'message': 'Logged out successfully.'}), 200
+    return redirect(url_for('login_form'))
+
+@app.route('/request_reset')
+def request_reset():
+    return render_template('reset_password.html')
+
+@app.route('/reset_password', methods=['POST'])
+def reset_password():
+    data = request.form
+    email = data.get('email')
+    new_password = data.get('new_password')
+
+    if not email or not new_password:
+        return render_template('reset_password.html', error="Email and new password are required.")
+    if email not in users:
+        return render_template('reset_password.html', error="Email not found.")
+
+    users[email] = generate_password_hash(new_password)
+    return redirect(url_for('login_form'))
 
 if __name__ == '__main__':
     app.run(debug=True)

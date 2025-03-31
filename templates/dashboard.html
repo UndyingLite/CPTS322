@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - AI Travel Buddy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container dashboard-box">
+    <h1>Welcome to Your Dashboard, <span style="color: #007bff;">{{ user_name }}</span></h1>
+    <p>Select a feature below to continue:</p>
+
+    <div class="dashboard-grid">
+      <a href="/ai_suggestions" class="dashboard-button">🌍 Destination</a>
+      <a href="/chat" class="dashboard-button">💬 Chat</a>
+      <a href="/profile" class="dashboard-button">👤 Profile</a>
+      <a href="/saved_trips" class="dashboard-button">🧳 Trips</a>
+      <a href="/request_reset" class="dashboard-button">📧 Reset</a>
+      <a href="/logout" class="dashboard-button logout">🚪 Logout</a>
+    </div>
+  </div>
+</body>
+</html>
