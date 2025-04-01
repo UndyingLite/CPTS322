@@ -1,26 +1,131 @@
-# Sprint 1 Backlog
+Sprint 2 Backlog
 
-## Sprint Dates
-- **Start Date**: Feb 15
-- **End Date**: Mar 9
-- **Submission Date**: Mar 11
+Sprint Dates
 
-## Sprint Goal
-Implement core foundational features so that a user can:
-1. Register and log in,
-2. Receive destination suggestions,
-3. Interact with an AI chat for basic travel queries,
-4. Store/retrieve data using a database.
+Start Date: March 17
 
-## Sprint Backlog Items
+End Date: March 31
 
-| Backlog ID | Title / Feature               | Assigned To | Acceptance Criteria                                                                                                                                                                           | Estimate (Points) | Status    |
-|------------|-------------------------------|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|-----------|
-| PB-1       | User Login & Registration    | **Kaleb**   | 1. Users can register with a valid email and password<br>2. System rejects invalid email format<br>3. On successful login, user is taken to a dashboard<br>4. Password reset link sent if requested | 3                 | Completed |
-| PB-2       | Destination Suggestions      | **Nick**    | 1. Users can input budget and interests<br>2. System provides at least two relevant destinations<br>3. Displays a warning if no suggestions match criteria<br>4. Optionally store queries/results in DB               | 5                 | Completed     |
-| PB-3       | AI Chat for Travel Queries   | **Melvin**  | 1. Front-end chat interface allows text input<br>2. AI responds with at least one travel-related suggestion (e.g., budget destination)<br>3. Handles error if AI service is unavailable<br>4. Stores conversation logs if DB is ready | 8                 | Completed     |
-| PB-6       | Database Integration         | **Zuriel**  | 1. A relational or NoSQL DB is connected to the back-end (e.g., PostgreSQL/MongoDB/SQLite)<br>2. Database stores user profiles (from PB-1) and AI chat logs<br>3. Secure DB credentials via environment variables<br>4. Basic test confirming data persistence | 3                 | To Do     |
+Submission Date: April 3
 
-### Notes
-- All tasks start in the **To Do** column on the Kanban board, except those marked as Completed.
-- Each team member will move their items from **In Progress** → **Code Review** → **Testing** → **Done** as they work.
+Sprint Goal
+
+Build upon Sprint 1 foundation to:
+
+Integrate AI travel suggestion capabilities.
+
+Build a functional AI-powered chat interface.
+
+Enable users to manage saved trips.
+
+Personalize user experience with profiles and flash messages.
+
+Sprint Backlog Items
+
+Backlog ID
+
+Title / Feature
+
+Assigned To
+
+Priority
+
+Acceptance Criteria
+
+Estimate (Points)
+
+Status
+
+PB-7
+
+Flash Messaging & Dashboard Polish
+
+Kaleb
+
+High
+
+1. Add styled flash messages for success and errors2. Style dashboard with proper layout and buttons3. Welcome users by name post-login
+
+3
+
+Completed
+
+PB-8
+
+Profile Page Setup
+
+Kaleb
+
+Medium
+
+1. Create /profile route and profile.html2. Display current user info3. Add placeholders for profile editing (optional)
+
+3
+
+In Progress
+
+PB-9
+
+AI Destination Suggestions
+
+Nick
+
+High
+
+1. Form for user to enter travel preferences2. Backend connects to AI API and returns destination ideas3. Styled results page
+
+5
+
+In Progress
+
+PB-10
+
+AI Chat Interface
+
+Melvin
+
+High
+
+1. Chat box UI embedded in dashboard2. Gemini/OpenAI integration3. Real-time suggestions from AI4. Error handling if API unavailable
+
+8
+
+In Progress
+
+PB-11
+
+Saved Trips Page
+
+Zuriel
+
+Medium
+
+1. Users can save favorite trips2. Trip info stored in session or database3. Trips listed at /saved_trips page with basic styling
+
+5
+
+In Progress
+
+PB-12
+
+Password Reset Workflow
+
+Kaleb
+
+Low
+
+1. Reset password form with input validation2. Flash messages on success/failure3. Optional: send reset confirmation via email
+
+2
+
+Completed
+
+Notes
+
+All Sprint 1 items were moved to the "Done" column.
+
+Each team member must complete at least one Sprint 2 item by March 31.
+
+Sprint progress is tracked via the Kanban board with columns: To Do, In Progress, Code Review, Testing, Done.
+
+Completed features will be demoed in the Sprint 2 Review video.
