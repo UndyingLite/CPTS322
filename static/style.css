@@ -1,7 +1,7 @@
 /* Import a Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
 
-/* Apply the font to the entire page */
+/* Base Page Setup */
 body {
   margin: 0;
   padding: 0;
@@ -11,18 +11,18 @@ body {
   color: #333;
 }
 
-/* A general container for pages */
+/* General Container */
 .container {
   max-width: 600px;
   margin: 40px auto;
   padding: 20px;
-  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
   backdrop-filter: blur(4px);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Dashboard-specific box styling */
+/* Dashboard Container */
 .dashboard-box {
   max-width: 900px;
   margin: 40px auto;
@@ -34,12 +34,13 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
+/* Headings */
 h1 {
   margin-top: 0;
   color: #007bff;
 }
 
-/* Navigation links */
+/* Navigation Links */
 nav a {
   color: #fff;
   background-color: #007bff;
@@ -53,7 +54,7 @@ nav a:hover {
   background-color: #0056b3;
 }
 
-/* Form styling */
+/* Form Styling */
 form {
   display: flex;
   flex-direction: column;
@@ -91,7 +92,7 @@ button[type="submit"]:hover {
   background-color: #0056b3;
 }
 
-/* Link styling for extra links on login/register pages */
+/* Link Styling */
 p a {
   color: #007bff;
   text-decoration: none;
@@ -101,19 +102,53 @@ p a:hover {
   text-decoration: underline;
 }
 
-/* Error message styling */
-.error-message {
-  background-color: #f8d7da;
-  color: #842029;
-  padding: 12px;
-  border: 1px solid #f5c2c7;
-  border-radius: 6px;
+/* Flash Messages */
+.flash {
+  animation: fadeIn 0.4s ease-in;
   margin-bottom: 15px;
   text-align: center;
   font-weight: 600;
+  padding: 12px;
+  border-radius: 6px;
+  position: relative;
 }
 
-/* Dashboard horizontal layout */
+.flash.success {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #badbcc;
+}
+
+.flash.error {
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+}
+
+/* Close Button for Flash Messages */
+.close-btn {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Flash Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dashboard Layout */
 .dashboard-grid {
   display: flex;
   flex-wrap: wrap;
@@ -138,9 +173,10 @@ p a:hover {
   background-color: #0056b3;
 }
 
-/* Special style for logout button */
+/* Logout Button Styling */
 .logout {
   background-color: #dc3545;
+  color: white;
 }
 
 .logout:hover {

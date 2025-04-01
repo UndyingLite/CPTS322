@@ -1,11 +1,12 @@
-from flask import Flask, request, session, render_template, redirect, url_for
+from flask import Flask, request, session, render_template, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # will update this later
+app.secret_key = 'your_secret_key_here'  # Will update this later
 
-# In-memory user store
+# In-memory user store and profile store
 users = {}
+user_profiles = {}
 
 @app.route('/')
 def home():
@@ -25,15 +26,18 @@ def register():
     email = data.get('email')
     password = data.get('password')
 
-    # Basic validations
     if not email or not password:
-        return render_template('register.html', error="Email and password are required.")
+        flash("Email and password are required.", "error")
+        return redirect(url_for('register_form'))
     if '@' not in email:
-        return render_template('register.html', error="Invalid email format.")
+        flash("Invalid email format.", "error")
+        return redirect(url_for('register_form'))
     if email in users:
-        return render_template('register.html', error="User already exists.")
+        flash("User already exists.", "error")
+        return redirect(url_for('register_form'))
 
     users[email] = generate_password_hash(password)
+    flash("Registration successful! You can now log in.", "success")
     return redirect(url_for('login_form'))
 
 @app.route('/login', methods=['POST'])
@@ -42,29 +46,60 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
-    # Basic validations
     if not email or not password:
-        return render_template('login.html', error="Email and password are required.")
+        flash("Email and password are required.", "error")
+        return redirect(url_for('login_form'))
     if email not in users:
-        return render_template('login.html', error="User not found.")
+        flash("User not found.", "error")
+        return redirect(url_for('login_form'))
     if not check_password_hash(users[email], password):
-        return render_template('login.html', error="Invalid password.")
+        flash("Invalid password.", "error")
+        return redirect(url_for('login_form'))
 
     session['user'] = email
+    flash(f"Welcome back, {email.split('@')[0]}!", "success")
     return redirect(url_for('dashboard'))
 
 @app.route('/dashboard')
 def dashboard():
     if 'user' not in session:
+        flash("Please log in to view your dashboard.", "error")
         return redirect(url_for('login_form'))
 
     user_email = session['user']
     user_name = user_email.split('@')[0]
     return render_template('dashboard.html', user_name=user_name)
 
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if 'user' not in session:
+        flash("Please log in to view your profile.", "error")
+        return redirect(url_for('login_form'))
+
+    email = session['user']
+    user_name = email.split('@')[0]
+
+    if request.method == 'POST':
+        full_name = request.form.get('full_name')
+        interests = request.form.get('interests')
+        budget = request.form.get('budget')
+
+        user_profiles[email] = {
+            'full_name': full_name,
+            'interests': interests,
+            'budget': budget
+        }
+
+        flash("Profile updated successfully!", "success")
+        return redirect(url_for('profile'))
+
+    profile_data = user_profiles.get(email, {})
+    return render_template('profile.html', user_name=user_name, profile=profile_data)
+
 @app.route('/logout', methods=['GET'])
 def logout():
     session.pop('user', None)
+    flash("You’ve been logged out.", "success")
     return redirect(url_for('login_form'))
 
 @app.route('/request_reset')
@@ -78,11 +113,14 @@ def reset_password():
     new_password = data.get('new_password')
 
     if not email or not new_password:
-        return render_template('reset_password.html', error="Email and new password are required.")
+        flash("Email and new password are required.", "error")
+        return redirect(url_for('request_reset'))
     if email not in users:
-        return render_template('reset_password.html', error="Email not found.")
+        flash("Email not found.", "error")
+        return redirect(url_for('request_reset'))
 
     users[email] = generate_password_hash(new_password)
+    flash("Password successfully reset. Please log in.", "success")
     return redirect(url_for('login_form'))
 
 if __name__ == '__main__':

@@ -1,23 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard - AI Travel Buddy</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <title>Dashboard - AI Travel Buddy</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="container dashboard-box">
-    <h1>Welcome to Your Dashboard, <span style="color: #007bff;">{{ user_name }}</span></h1>
-    <p>Select a feature below to continue:</p>
+    <h1>Welcome, <span style="color: #007bff;">{{ user_name }}</span> 👋</h1>
+    <p style="margin-top: -10px;">Select a feature to get started:</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">
+            <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
     <div class="dashboard-grid">
-      <a href="/ai_suggestions" class="dashboard-button">🌍 Destination</a>
-      <a href="/chat" class="dashboard-button">💬 Chat</a>
-      <a href="/profile" class="dashboard-button">👤 Profile</a>
-      <a href="/saved_trips" class="dashboard-button">🧳 Trips</a>
-      <a href="/request_reset" class="dashboard-button">📧 Reset</a>
+      <a href="/ai_suggestions" class="dashboard-button">🌍 Destination Suggestions</a>
+      <a href="/chat" class="dashboard-button">💬 Travel Chat Assistant</a>
+      <a href="/profile" class="dashboard-button">👤 View / Edit Profile</a>
+      <a href="/saved_trips" class="dashboard-button">🧳 Saved Trips</a>
+      <a href="/request_reset" class="dashboard-button">📧 Reset Password</a>
       <a href="/logout" class="dashboard-button logout">🚪 Logout</a>
     </div>
   </div>
+
+  <script>
+    // Auto-dismiss flash messages after 3 seconds
+    setTimeout(() => {
+      document.querySelectorAll('.flash').forEach(flash => {
+        flash.style.opacity = '0';
+        flash.style.transform = 'translateY(-10px)';
+        flash.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        setTimeout(() => flash.remove(), 500);
+      });
+    }, 3000);
+  </script>
 </body>
 </html>
