@@ -1,0 +1,39 @@
+# Sprint 2 Retrospective
+
+**Date**: April 1, 2025  
+**Sprint Duration**: March 17 – March 31
+
+---
+
+## 1. What Went Well
+- User dashboard, password reset, and profile page were implemented cleanly.
+- Flash messaging and improved UI significantly enhanced the experience.
+- GitHub commits were consistent, and team collaboration improved.
+- Sprint planning and backlog refinement helped clarify responsibilities.
+
+---
+
+## 2. What Didn’t Go Well
+- Saved Trips feature was started late and is still incomplete.
+- Not all teammates pushed code changes on time, leading to merge delays.
+- Some API error handling (Gemini/OpenAI) was inconsistent or lacked fallback UI.
+
+---
+
+## 3. Potential Improvements
+1. **Finish Critical Features Earlier**: Push key features into the first week of the sprint.
+2. **Enforce Branching & Merge Discipline**: Require teammates to open pull requests rather than direct main edits.
+3. **Improve Test Coverage**: Write basic tests or include test cases to validate expected flows.
+
+---
+
+## 4. Action Items
+1. **Finalize Saved Trips implementation** – assigned to **Zuriel**
+2. **Add persistent database support (SQLite or MongoDB)** – coordinated by **Kaleb**
+3. **Set feature deadlines earlier in Sprint 3** to allow for QA time – agreed by team
+4. **Use Git branches and PRs going forward** – enforced by **Melvin**
+
+---
+
+**Team Sentiment**:  
+Sprint 2 felt more cohesive. Everyone built on Sprint 1 foundations, and the project now looks and feels like a functional app. Sprint 3 will focus on data persistence, testing, and remaining features.
