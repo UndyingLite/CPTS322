@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Register - AI Travel Buddy</title>
+  <title>Your Profile - AI Travel Buddy</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="container">
-    <h1>Register</h1>
+    <h1>👤 Your Profile</h1>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -20,24 +20,25 @@
       {% endif %}
     {% endwith %}
 
-    <form action="/register" method="post">
-      <label for="email">Email:</label>
-      <input type="email" name="email" id="email" required>
+    <form action="/profile" method="POST">
+      <label for="name">Name:</label>
+      <input type="text" name="name" id="name" value="{{ user_data.name if user_data else '' }}" required>
 
-      <label for="password">Password:</label>
-      <input type="password" name="password" id="password" required>
+      <label for="interests">Travel Interests:</label>
+      <input type="text" name="interests" id="interests" value="{{ user_data.interests if user_data else '' }}" placeholder="e.g., beaches, mountains, culture">
 
-      <button type="submit">Register</button>
+      <label for="budget">Monthly Budget ($):</label>
+      <input type="number" name="budget" id="budget" value="{{ user_data.budget if user_data else '' }}" min="0">
+
+      <button type="submit">Update Profile</button>
     </form>
 
-    <p>Already have an account? <a href="/login_form">Login here</a>.</p>
+    <p><a href="/dashboard">⬅️ Back to Dashboard</a></p>
   </div>
 
-  <!-- Flash Message Auto-Fade Script -->
   <script>
     setTimeout(() => {
-      const flashes = document.querySelectorAll('.flash');
-      flashes.forEach(flash => {
+      document.querySelectorAll('.flash').forEach(flash => {
         flash.style.opacity = '0';
         flash.style.transform = 'translateY(-10px)';
         flash.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
