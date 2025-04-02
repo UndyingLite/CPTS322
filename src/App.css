@@ -58,12 +58,40 @@ button:disabled {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .user-info p {
   margin: 0;
   color: #28a745;
+}
+
+.navigation-menu {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.navigation-menu button {
+  padding: 8px 15px;
+  background-color: #f8f9fa;
+  color: #495057;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navigation-menu button:hover {
+  background-color: #e9ecef;
+}
+
+.navigation-menu button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
 }
 
 .chat-box {
