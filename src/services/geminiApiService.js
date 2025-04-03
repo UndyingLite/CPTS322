@@ -123,10 +123,7 @@ const geminiApiService = {
    */
   getChatResponse: async (userMessage) => {
     try {
-      // API key - Replace with your actual Gemini API key
-      // You can get an API key from https://makersuite.google.com/app/apikey
-      const apiKey = process.env.REACT_APP_GEMINI_API_KEY || "enterapikey";
-      
+      const apiKey = process.env.REACT_APP_GEMINI_API_KEY || "AIzaSyAsvh-yp3ifMnuV0HOV4m-3BmramZXc6rU";
       // If no valid API key is provided, the service will fall back to mock data
       if (apiKey === "enterapikey") {
         console.warn("No valid Gemini API key provided. Using mock data instead.");
