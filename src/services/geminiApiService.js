@@ -123,7 +123,7 @@ const geminiApiService = {
    */
   getChatResponse: async (userMessage) => {
     try {
-      const apiKey = process.env.REACT_APP_GEMINI_API_KEY || "AIzaSyAsvh-yp3ifMnuV0HOV4m-3BmramZXc6rU";
+      const apiKey = process.env.REACT_APP_GEMINI_API_KEY || "AIzaSyAsSiEBSTgs9X_wlVQE_bLxTqyAMDw9f_k";
       // If no valid API key is provided, the service will fall back to mock data
       if (apiKey === "enterapikey") {
         console.warn("No valid Gemini API key provided. Using mock data instead.");
@@ -170,6 +170,7 @@ const geminiApiService = {
 
       // Attempt to get text from the response
       const responseText = data.candidates?.[0]?.content.parts?.[0]?.text;
+      console.log("Parsed responseText:", responseText);
       if (!responseText) {
         throw new Error('No response text found from Gemini');
       }
