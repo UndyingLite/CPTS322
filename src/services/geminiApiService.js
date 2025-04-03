@@ -121,66 +121,66 @@ const geminiApiService = {
    * @param {string} userMessage The user's text input
    * @returns {Promise<string>} The AI-generated text
    */
-  getChatResponse: async (userMessage) => {
-    try {
-      const apiKey = process.env.REACT_APP_GEMINI_API_KEY || "AIzaSyAsvh-yp3ifMnuV0HOV4m-3BmramZXc6rU";
-      // If no valid API key is provided, the service will fall back to mock data
-      if (apiKey === "enterapikey") {
-        console.warn("No valid Gemini API key provided. Using mock data instead.");
-        throw new Error("No valid API key");
-      }
-
-      // We'll ask for a single travel suggestion
-      const prompt = `The user wants a travel suggestion. They say: "${userMessage}"
-      
-      Please respond with at least one travel-related recommendation. 
-      If relevant, include a budget-friendly tip or destination in your reply.
-      Format your answer as plain text.`;
-
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/text-bison-001:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  {
-                    text: prompt
-                  }
-                ]
-              }
-            ],
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 500
-            }
-          })
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Chat request failed');
-      }
-
-      const data = await response.json();
-      console.log("Gemini Chat Response:", data);
-
-      // Attempt to get text from the response
-      const responseText = data.candidates?.[0]?.content.parts?.[0]?.text;
-      console.log("Parsed responseText:", responseText);
-      if (!responseText) {
-        throw new Error('No response text found from Gemini');
-      }
-
-      return responseText.trim();
-    } catch (error) {
-      console.error('Error in getChatResponse:', error);
-      throw error;
+getChatResponse: async (userMessage) => {
+  try {
+    const apiKey = process.env.REACT_APP_GEMINI_API_KEY || "enterapikey";
+    if (apiKey === "enterapikey") {
+      console.warn("No valid Gemini API key provided. Using mock data instead.");
+      // Return a fallback response for testing since api key is having issues
+      return "I don't have access to real-time data right now, but I can suggest checking out budget-friendly destinations like Southeast Asia or Eastern Europe. Both offer amazing cultural experiences at lower costs than Western Europe or North America.";
     }
-  },
+
+    // Use the same model as your other functions for consistency
+    const prompt = `The user wants a travel suggestion. They say: "${userMessage}"
+    
+    Please respond with at least one travel-related recommendation. 
+    If relevant, include a budget-friendly tip or destination in your reply.
+    Format your answer as plain text.`;
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: prompt
+                }
+              ]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 500
+          }
+        })
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || 'Chat request failed');
+    }
+
+    const data = await response.json();
+    console.log("Gemini Chat Response:", data);
+
+    // Handle the Gemini response format
+    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    console.log("Parsed responseText:", responseText);
+    if (!responseText) {
+      throw new Error('No response text found from Gemini');
+    }
+
+    return responseText.trim();
+  } catch (error) {
+    console.error('Error in getChatResponse:', error);
+    throw error;
+  }
+}
   
   /**
    * Get destination suggestions based on user preferences
