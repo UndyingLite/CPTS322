@@ -181,7 +181,19 @@ getChatResponse: async (userMessage) => {
     throw error;
   }
 }
+getMockChatResponse: (userMessage) => {
+  const responses = [
+    "Based on your interests, I'd recommend visiting Portugal. It's more affordable than many Western European destinations, with beautiful beaches, historic cities like Lisbon and Porto, and excellent food and wine!",
+    "Thailand could be perfect for you! It offers amazing beaches, delicious food, and cultural experiences at a fraction of the cost of many destinations. Stay in budget guesthouses and eat street food to keep costs down.",
+    "Consider Mexico City for your next trip! It has world-class museums, incredible food, and your money will go much further than in many US or European cities. The metro system makes getting around easy and affordable.",
+    "Japan might seem expensive, but you can travel there on a budget by staying in capsule hotels or hostels, eating at conveyor belt sushi restaurants, and using a Japan Rail Pass for transportation.",
+    "If you're looking for nature and adventure, consider Costa Rica. Visit during the green season (May-November) for lower prices, fewer tourists, and still plenty of sunshine between short rain showers."
+  ];
   
+  // Return a random response
+  return responses[Math.floor(Math.random() * responses.length)];
+}
+
   /**
    * Get destination suggestions based on user preferences
    * 
