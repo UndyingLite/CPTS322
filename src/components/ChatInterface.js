@@ -8,29 +8,36 @@ function ChatInterface({ onSaveConversation }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSend = async () => {
-    if (!userInput.trim()) return;
-
-    // 1. Add user message to local state
-    const userMsg = { sender: 'user', text: userInput };
-    setMessages((prev) => [...prev, userMsg]);
-    setUserInput('');
-    setError(null);
-    setIsLoading(true);
-
+  if (!userInput.trim()) return;
+  
+  // 1. Add user message to local state
+  const userMsg = { sender: 'user', text: userInput };
+  setMessages((prev) => [...prev, userMsg]);
+  setUserInput('');
+  setError(null);
+  setIsLoading(true);
+  
+  try {
+    let aiReply;
     try {
-      // 2. Call the new getChatResponse function in geminiApiService
-      const aiReply = await geminiApiService.getChatResponse(userInput);
-
-      // 3. Add AI response
-      const botMsg = { sender: 'bot', text: aiReply };
-      setMessages((prev) => [...prev, botMsg]);
-    } catch (err) {
-      console.error('AI Service Error:', err);
-      setError('AI service is unavailable. Please try again later.');
-    } finally {
-      setIsLoading(false);
+      // Try to get a response from Gemini
+      aiReply = await geminiApiService.getChatResponse(userInput);
+    } catch (apiError) {
+      console.warn('Gemini API error, falling back to mock data:', apiError);
+      // Fall back to mock data if API fails
+      aiReply = geminiApiService.getMockChatResponse(userInput);
     }
-  };
+    
+    // 3. Add AI response
+    const botMsg = { sender: 'bot', text: aiReply };
+    setMessages((prev) => [...prev, botMsg]);
+  } catch (err) {
+    console.error('AI Service Error:', err);
+    setError('AI service is unavailable. Please try again later.');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   // Save conversation (logs) to your Flask back-end
   const handleSave = async () => {
