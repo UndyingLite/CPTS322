@@ -126,12 +126,36 @@ def chat():
         return redirect(url_for('login_form'))
     return render_template('chat.html')
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
     if 'user' not in session:
         flash("Please log in to view your profile.", "error")
         return redirect(url_for('login_form'))
-    return render_template('profile.html')
+
+    email = session['user']
+
+    # Mock profile store (add this at the top if you haven't already)
+    global user_profiles
+    if 'user_profiles' not in globals():
+        user_profiles = {}
+
+    if request.method == 'POST':
+        name = request.form.get('name')
+        interests = request.form.get('interests')
+        budget = request.form.get('budget')
+
+        user_profiles[email] = {
+            'name': name,
+            'interests': interests,
+            'budget': budget
+        }
+
+        flash("Profile updated successfully!", "success")
+        return redirect(url_for('profile'))
+
+    user_data = user_profiles.get(email, {})
+    return render_template('profile.html', user_data=user_data)
+
 
 @app.route('/saved_trips')
 def saved_trips():
