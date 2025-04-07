@@ -12,11 +12,15 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-          <div class="flash {{ category }}">{{ message }}</div>
+          <div class="flash {{ category }}">
+            <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+            {{ message }}
+          </div>
         {% endfor %}
       {% endif %}
     {% endwith %}
 
+    <!-- Fixed the form action -->
     <form action="/login" method="post">
       <label for="email">Email:</label>
       <input type="email" name="email" id="email" required>
@@ -30,5 +34,17 @@
     <p><a href="/request_reset">Forgot your password?</a></p>
     <p>Don't have an account? <a href="/register_form">Register here</a>.</p>
   </div>
+
+  <script>
+    setTimeout(() => {
+      const flashes = document.querySelectorAll('.flash');
+      flashes.forEach(flash => {
+        flash.style.opacity = '0';
+        flash.style.transform = 'translateY(-10px)';
+        flash.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        setTimeout(() => flash.remove(), 500);
+      });
+    }, 3000);
+  </script>
 </body>
 </html>
