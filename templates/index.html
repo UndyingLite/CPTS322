@@ -6,13 +6,20 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div class="container">
-    <h1>Welcome to AI Travel Buddy</h1>
-    <p>Please register or log in to access your dashboard.</p>
-    <nav>
-      <a href="/register_form">Register</a>
-      <a href="/login_form">Login</a>
-    </nav>
+  <div class="container home-box">
+    <h1 class="title">Welcome to <span style="color: #007bff;">AI Travel Buddy</span></h1>
+    <p class="subtitle">Your smart travel companion — powered by AI</p>
+
+    <div class="button-group">
+      <a href="/register_form" class="home-button">✈️ Register</a>
+      <a href="/login_form" class="home-button">🔑 Login</a>
+    </div>
+
+    <div class="feature-highlights">
+      <p>🌍 Get AI-curated destination suggestions</p>
+      <p>🧠 Chat with your travel assistant</p>
+      <p>🧳 Save & plan upcoming trips</p>
+    </div>
   </div>
 </body>
 </html>
