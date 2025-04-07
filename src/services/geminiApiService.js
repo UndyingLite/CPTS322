@@ -188,16 +188,47 @@ getChatResponse: async (userMessage) => {
    * @returns {string} A mock AI-generated response
    */
   getMockChatResponse: (userMessage) => {
-    const responses = [
-      "Based on your interests, I'd recommend visiting Portugal. It's more affordable than many Western European destinations, with beautiful beaches, historic cities like Lisbon and Porto, and excellent food and wine!",
-      "Thailand could be perfect for you! It offers amazing beaches, delicious food, and cultural experiences at a fraction of the cost of many destinations. Stay in budget guesthouses and eat street food to keep costs down.",
-      "Consider Mexico City for your next trip! It has world-class museums, incredible food, and your money will go much further than in many US or European cities. The metro system makes getting around easy and affordable.",
-      "Japan might seem expensive, but you can travel there on a budget by staying in capsule hotels or hostels, eating at conveyor belt sushi restaurants, and using a Japan Rail Pass for transportation.",
-      "If you're looking for nature and adventure, consider Costa Rica. Visit during the green season (May-November) for lower prices, fewer tourists, and still plenty of sunshine between short rain showers."
-    ];
-    
-    // Return a random response
-    return responses[Math.floor(Math.random() * responses.length)];
+    const userMessageLower = userMessage.toLowerCase();
+
+    const greetingKeywords = ["hey", "hello", "hi"];
+    const gratitudeKeywords = ["no, thank you", "thank you", "thanks"];
+    const recommendationKeywords = ["recommendation", "recommendations", "suggest", "suggestions", "trip", "travel"];
+    const budgetKeywords = ["cheap", "affordable", "budget", "inexpensive"];
+    const luxuryKeywords = ["luxury", "expensive", "premium", "high-end"];
+    const helpKeywords = ["help", "assistance", "advice"];
+
+    if (greetingKeywords.some(keyword => userMessageLower.includes(keyword))) {
+      return "Hello! How can I help you plan your next adventure?";
+    }
+
+    if (gratitudeKeywords.some(keyword => userMessageLower.includes(keyword))) {
+      return "You're welcome! Let me know if you need anything else.";
+    }
+
+    if (helpKeywords.some(keyword => userMessageLower.includes(keyword))) {
+      return "I can help you with destination suggestions, itinerary planning, and budget advice. What are you looking for?";
+    }
+
+    if (budgetKeywords.some(keyword => userMessageLower.includes(keyword))) {
+      return "For a budget-friendly trip, consider Southeast Asia or Eastern Europe. Check out Mexico or Central America for affordable travel options. Portugal and Spain can be surprisingly affordable, especially if you travel during the off-season.";
+    }
+
+    if (luxuryKeywords.some(keyword => userMessageLower.includes(keyword))) {
+      return "For a luxurious getaway, consider the Maldives or Bora Bora. Explore the French Riviera or the Amalfi Coast for a high-end experience. Consider a safari in Africa for an unforgettable luxury adventure.";
+    }
+
+    if (recommendationKeywords.some(keyword => userMessageLower.includes(keyword))) {
+      const responses = [
+        "Based on your interests, I'd recommend visiting Portugal. It's more affordable than many Western European destinations, with beautiful beaches, historic cities like Lisbon and Porto, and excellent food and wine!",
+        "Thailand could be perfect for you! It offers amazing beaches, delicious food, and cultural experiences at a fraction of the cost of many destinations. Stay in budget guesthouses and eat street food to keep costs down.",
+        "Consider Mexico City for your next trip! It has world-class museums, incredible food, and your money will go much further than in many US or European cities. The metro system makes getting around easy and affordable.",
+        "Japan might seem expensive, but you can travel there on a budget by staying in capsule hotels or hostels, eating at conveyor belt sushi restaurants, and using a Japan Rail Pass for transportation.",
+        "If you're looking for nature and adventure, consider Costa Rica. Visit during the green season (May-November) for lower prices, fewer tourists, and still plenty of sunshine between short rain showers."
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    return "I'm sorry, I didn't understand your request. Can you please provide more information about what you're looking for?";
   },
 
   /**
