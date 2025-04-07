@@ -85,6 +85,12 @@ function ChatInterface({ onSaveConversation }) {
         rows="3"
         value={userInput}
         onChange={(e) => setUserInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSend();
+          }
+        }}
         placeholder="Ask for travel suggestions..."
         style={{ width: '100%', marginTop: '10px' }}
       />
