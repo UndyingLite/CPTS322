@@ -4,62 +4,6 @@
   <meta charset="UTF-8">
   <title>Saved Trips - AI Travel Buddy</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    .saved-trips-container {
-      margin-top: 20px;
-    }
-    
-    .destination-card {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      background-color: #fff;
-    }
-    
-    .destination-card h3 {
-      color: #007bff;
-      margin-top: 0;
-    }
-    
-    .destination-card p {
-      margin: 10px 0;
-    }
-    
-    .attractions-list {
-      padding-left: 20px;
-    }
-    
-    .destination-meta {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 15px;
-      font-size: 0.9em;
-      color: #666;
-    }
-    
-    .plan-button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    
-    .plan-button:hover {
-      background-color: #0069d9;
-    }
-    
-    .no-trips-message {
-      background-color: #f8f9fa;
-      padding: 20px;
-      border-radius: 8px;
-      text-align: center;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
@@ -67,15 +11,15 @@
     <p>Welcome, <span style="color: #007bff;">{{ user_name }}</span>! Here are your saved destinations.</p>
     
     <div class="navigation-links">
-      <a href="/dashboard" class="nav-link">← Back to Dashboard</a>
-      <a href="/ai_suggestions" class="nav-link">Find New Destinations</a>
+      <a href="/dashboard" class="button button-secondary">⬅️ Back to Dashboard</a>
+      <a href="/ai_suggestions" class="button">Find New Destinations</a>
     </div>
     
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
           <div class="flash {{ category }}">
-            <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <span class="close-btn" onclick="this.parentElement.style.display='none';">×</span>
             {{ message }}
           </div>
         {% endfor %}
@@ -107,7 +51,7 @@
       {% else %}
         <div class="no-trips-message">
           <p>You haven't saved any destinations yet.</p>
-          <a href="/ai_suggestions" class="nav-link">Discover Destinations</a>
+          <a href="/ai_suggestions" class="button">Discover Destinations</a>
         </div>
       {% endif %}
     </div>
