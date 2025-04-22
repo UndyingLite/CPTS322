@@ -13,7 +13,7 @@
       {% if messages %}
         {% for category, message in messages %}
           <div class="flash {{ category }}">
-            <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <span class="close-btn" onclick="this.parentElement.style.display='none';">×</span>
             {{ message }}
           </div>
         {% endfor %}
@@ -33,7 +33,7 @@
       <button type="submit">Update Profile</button>
     </form>
 
-    <p><a href="/dashboard">⬅️ Back to Dashboard</a></p>
+    <p><a href="/dashboard" class="button button-secondary">⬅️ Back to Dashboard</a></p>
   </div>
 
   <script>
