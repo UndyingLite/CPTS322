@@ -4,108 +4,6 @@
   <meta charset="UTF-8">
   <title>Destination Suggestions - AI Travel Buddy</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    .destination-container {
-      margin-top: 20px;
-    }
-    
-    .destination-card {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      background-color: #fff;
-    }
-    
-    .destination-card h3 {
-      color: #007bff;
-      margin-top: 0;
-    }
-    
-    .destination-card p {
-      margin: 10px 0;
-    }
-    
-    .attractions-list {
-      padding-left: 20px;
-    }
-    
-    .destination-meta {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 15px;
-      font-size: 0.9em;
-      color: #666;
-    }
-    
-    .save-button {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    
-    .save-button:hover {
-      background-color: #218838;
-    }
-    
-    .preferences-form {
-      background-color: #f8f9fa;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-    
-    .form-group {
-      margin-bottom: 15px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    
-    .form-group select,
-    .form-group input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-    
-    .submit-button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    
-    .submit-button:hover {
-      background-color: #0069d9;
-    }
-    
-    .loading {
-      text-align: center;
-      margin: 20px 0;
-      display: none;
-    }
-    
-    .error-message {
-      color: #dc3545;
-      margin: 10px 0;
-      padding: 10px;
-      background-color: #f8d7da;
-      border-radius: 4px;
-      display: none;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
@@ -113,14 +11,14 @@
     <p>Welcome, <span style="color: #007bff;">{{ user_name }}</span>! Find your perfect travel destination.</p>
     
     <div class="navigation-links">
-      <a href="/dashboard" class="nav-link">← Back to Dashboard</a>
+      <a href="/dashboard" class="button button-secondary">⬅️ Back to Dashboard</a>
     </div>
     
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
           <div class="flash {{ category }}">
-            <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <span class="close-btn" onclick="this.parentElement.style.display='none';">×</span>
             {{ message }}
           </div>
         {% endfor %}
