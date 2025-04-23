@@ -8,16 +8,23 @@
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to right, #4facfe, #00f2fe);
+      background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
       color: #fff;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
 
-    .hero {
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
       text-align: center;
-      padding: 100px 20px 50px;
     }
 
     .hero h1 {
@@ -49,52 +56,58 @@
       display: flex;
       justify-content: center;
       gap: 40px;
-      margin: 50px 20px;
+      margin: 40px 0;
       flex-wrap: wrap;
       color: #fff;
     }
 
     .feature {
       max-width: 200px;
-      text-align: center;
     }
 
     footer {
-      margin-top: auto;
       text-align: center;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.3);
       font-size: 14px;
+      color: #ddd;
+    }
+
+    footer a {
+      color: #fff;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="hero">
-    <h1>AI Travel Buddy 🌍</h1>
-    <p>Your smart companion for personalized travel planning.</p>
-    <div class="buttons">
-      <a href="/register_form">✈️ Get Started</a>
-      <a href="/login_form">🔑 Login</a>
+  <div class="overlay">
+    <div class="hero">
+      <h1>AI Travel Buddy 🌍</h1>
+      <p>Your smart companion for personalized travel planning.</p>
+      <div class="buttons">
+        <a href="/register_form">✈️ Get Started</a>
+        <a href="/login_form">🔑 Login</a>
+      </div>
     </div>
-  </div>
 
-  <div class="features">
-    <div class="feature">
-      <h3>🌍 Destinations</h3>
-      <p>AI-powered travel suggestions tailored to you.</p>
-    </div>
-    <div class="feature">
-      <h3>💬 Chat Assistant</h3>
-      <p>Instant answers to your travel questions.</p>
-    </div>
-    <div class="feature">
-      <h3>🧳 Save Trips</h3>
-      <p>Plan, save, and manage your dream vacations.</p>
+    <div class="features">
+      <div class="feature">
+        <h3>🌍 Destinations</h3>
+        <p>AI-powered travel suggestions tailored to you.</p>
+      </div>
+      <div class="feature">
+        <h3>💬 Chat Assistant</h3>
+        <p>Instant answers to your travel questions.</p>
+      </div>
+      <div class="feature">
+        <h3>🧳 Save Trips</h3>
+        <p>Plan, save, and manage your dream vacations.</p>
+      </div>
     </div>
   </div>
 
   <footer>
-    © 2024 AI Travel Buddy | <a href="https://github.com/UndyingLite/CPTS322" target="_blank" style="color: #fff;">GitHub</a>
+    © 2024 AI Travel Buddy | <a href="https://github.com/UndyingLite/CPTS322" target="_blank">GitHub</a>
   </footer>
 </body>
 </html>
