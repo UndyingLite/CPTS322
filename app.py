@@ -221,10 +221,16 @@ def api_chat():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/save_conversation', methods=['POST'])
+def save_conversation():
+    messages = request.json['messages']
+    # In a real application, you would save the messages to a database
+    print("Saving conversation:", messages)
+    return jsonify({'status': 'success', 'message': 'Conversation saved successfully!'})
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
 
 # Run server
 if __name__ == '__main__':
