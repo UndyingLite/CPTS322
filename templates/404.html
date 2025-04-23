@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Page Not Found - AI Travel Buddy</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .error-container {
+      text-align: center;
+      margin-top: 100px;
+    }
+    .error-container h1 {
+      font-size: 80px;
+      color: #007bff;
+    }
+    .error-container p {
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
+    .home-link {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .home-link:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <h1>404</h1>
+    <p>Oops! The page you're looking for doesn't exist.</p>
+    <a href="/" class="home-link">🏠 Back to Home</a>
+  </div>
+</body>
+</html>
