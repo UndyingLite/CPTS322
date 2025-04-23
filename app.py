@@ -1,11 +1,11 @@
+from dotenv import load_dotenv
+load_dotenv()
 from flask import Flask, request, session, render_template, redirect, url_for, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from dotenv import load_dotenv
 import os
 import re
 
 # Load environment variables
-load_dotenv()
 
 # Flask app setup
 app = Flask(__name__)
@@ -167,6 +167,23 @@ def saved_trips():
 @app.route('/request_reset')
 def request_reset():
     return render_template('reset_password.html')
+
+from chat import generate
+import io, sys
+
+@app.route('/api/chat', methods=['POST'])
+def chat_api():
+    try:
+        data = request.get_json()
+        if not data or 'user_input' not in data:
+            return jsonify({'error': {'message': 'Missing user input'}}, 400)
+        user_input = data['user_input']
+        print(f"User input in chat_api: {user_input}")
+        reply = generate(user_input)
+        return jsonify({'reply': reply})
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': {'message': str(e)}}, 500)
 
 # Run server
 if __name__ == '__main__':

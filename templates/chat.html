@@ -70,8 +70,11 @@
     }
     
     async function sendMessage() {
-      const text = userInput.value.trim();
+      let text = userInput.value.trim();
       if (!text) return;
+
+      // Escape HTML entities to prevent XSS
+      text = text.replace(/</g, "<").replace(/>/g, ">");
       
       userInput.value = '';
       addMessage(text, 'user');
@@ -84,7 +87,7 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ message: text })
+          body: JSON.stringify({ user_input: text })
         });
         
         if (!response.ok) {
@@ -92,7 +95,7 @@
         }
         
         const data = await response.json();
-        addMessage(data.response, 'bot');
+        addMessage(data.reply, 'bot');
       } catch (error) {
         console.error('Error:', error);
         addMessage('Sorry, I encountered an error. Please try again.', 'bot');

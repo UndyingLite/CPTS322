@@ -1,105 +1,95 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import geminiApiService from '../services/geminiApiService';
 
 function ChatInterface({ onSaveConversation }) {
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const endRef = useRef(null);
+
+  // Auto-scroll to latest message
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const handleSend = async () => {
-  if (!userInput.trim()) return;
-  
-  // 1. Add user message to local state
-  const userMsg = { sender: 'user', text: userInput };
-  setMessages((prev) => [...prev, userMsg]);
-  setUserInput('');
-  setError(null);
-  setIsLoading(true);
-  
-  try {
-    let aiReply;
-    try {
-      // Try to get a response from Gemini
-      aiReply = await geminiApiService.getChatResponse(userInput);
-    } catch (apiError) {
-      console.warn('Gemini API error, falling back to mock data:', apiError);
-      // Fall back to mock data if API fails
-      aiReply = geminiApiService.getMockChatResponse(userInput);
-    }
-    
-    // 3. Add AI response
-    const botMsg = { sender: 'bot', text: aiReply };
-    setMessages((prev) => [...prev, botMsg]);
-  } catch (err) {
-    console.error('AI Service Error:', err);
-    setError('AI service is unavailable. Please try again later.');
-  } finally {
-    setIsLoading(false);
-  }
-};
+    if (!userInput.trim()) return;
+    setError('');
+    setIsLoading(true);
+    setMessages(msgs => [...msgs, { sender: 'user', text: userInput }]);
+    const input = userInput;
+    setUserInput('');
 
-  // Save conversation (logs) to your Flask back-end
+    try {
+      const replyText = await geminiApiService.getChatResponse(input);
+      setMessages(msgs => [...msgs, { sender: 'bot', text: replyText }]);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSave = async () => {
     if (!messages.length) return;
-
     try {
-      // Make a POST request to a Flask endpoint
-      const response = await fetch('/save_conversation', {
+      const res = await fetch('/save_conversation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages })
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to save conversation');
-      }
-
-      // Optionally parse the response JSON
-      const data = await response.json();
-      console.log('Conversation saved:', data);
-
-      // You could show a success alert or message
-      alert('Conversation saved successfully!');
+      if (!res.ok) throw new Error('Failed to save conversation');
+      await res.json();
+      alert('Conversation saved!');
+      onSaveConversation?.(messages);
     } catch (err) {
-      console.error('Error saving conversation:', err);
-      setError('Failed to save conversation. Please try again.');
+      console.error(err);
+      setError('Save failed: ' + err.message);
     }
   };
 
   return (
-    <div style={{ marginTop: '20px' }}>
-      <h2>Chat with TravelBuddy</h2>
-
-      <div style={{ border: '1px solid #ccc', padding: '10px', maxHeight: '200px', overflowY: 'auto' }}>
-        {messages.map((msg, index) => (
-          <div key={index} style={{ margin: '5px 0' }}>
-            <strong>{msg.sender === 'user' ? 'You' : 'Bot'}:</strong> {msg.text}
+    <div style={{ margin: '20px' }}>
+      <h2>TravelBuddy Chat</h2>
+      <div style={{
+        border: '1px solid #ccc',
+        padding: '10px',
+        height: '300px',
+        overflowY: 'auto'
+      }}>
+        {messages.map((m, i) => (
+          <div key={i} style={{ margin: '5px 0' }}>
+            <strong>{m.sender === 'user' ? 'You' : 'Bot'}:</strong> {m.text}
           </div>
         ))}
+        <div ref={endRef} />
       </div>
-
       {error && <p style={{ color: 'red' }}>{error}</p>}
-
       <textarea
-        rows="3"
+        rows={3}
         value={userInput}
-        onChange={(e) => setUserInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
+        onChange={e => setUserInput(e.target.value)}
+        onKeyDown={e => {
+          if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSend();
           }
         }}
-        placeholder="Ask for travel suggestions..."
+        placeholder="Type a message..."
         style={{ width: '100%', marginTop: '10px' }}
       />
       <div style={{ marginTop: '10px' }}>
         <button onClick={handleSend} disabled={isLoading}>
           {isLoading ? 'Sending...' : 'Send'}
         </button>
-        <button onClick={handleSave} style={{ marginLeft: '10px' }} disabled={!messages.length}>
-          Save Conversation
+        <button
+          onClick={handleSave}
+          disabled={!messages.length}
+          style={{ marginLeft: '10px' }}
+        >
+          Save
         </button>
       </div>
     </div>
