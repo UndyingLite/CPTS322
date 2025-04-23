@@ -161,6 +161,26 @@ def profile():
     user_data = user_profiles.get(email, {})
     return render_template('profile.html', user_data=user_data)
 
+@app.route('/reset_password', methods=['POST'])
+def reset_password():
+    email = request.form.get('email')
+    new_password = request.form.get('new_password')
+
+    if not email or not new_password:
+        flash("Both email and new password are required.", "error")
+        return redirect(url_for('request_reset'))
+
+    if email not in users:
+        flash("Email not found. Please register first.", "error")
+        return redirect(url_for('request_reset'))
+
+    users[email] = generate_password_hash(new_password)
+    flash("Password reset successfully. You can now log in.", "success")
+    return redirect(url_for('login_form'))
+
+
+
+
 
 @app.route('/saved_trips')
 def saved_trips():
