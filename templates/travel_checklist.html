@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Travel Checklist</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>📝 Your Travel Checklist</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">
+            <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      {% for item in items %}
+        <div>
+          <input type="checkbox" name="item" value="{{ item }}" 
+          {% if item in checked_items %}checked{% endif %}>
+          <label>{{ item }}</label>
+        </div>
+      {% endfor %}
+      <button type="submit">Save Checklist</button>
+    </form>
+
+    <p><a href="/dashboard" class="button button-secondary">⬅️ Back to Dashboard</a></p>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      document.querySelectorAll('.flash').forEach(flash => {
+        flash.style.opacity = '0';
+        flash.style.transform = 'translateY(-10px)';
+        flash.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        setTimeout(() => flash.remove(), 500);
+      });
+    }, 3000);
+  </script>
+</body>
+</html>

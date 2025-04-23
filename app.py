@@ -410,6 +410,31 @@ def save_destination():
         'status': 'success', 
         'message': 'Destination saved successfully!'
     })
+@app.route('/request_reset')
+def request_reset():
+    return render_template('reset_password.html')
+
+@app.route('/travel_checklist', methods=['GET', 'POST'])
+def travel_checklist():
+    if 'user' not in session:
+        flash("Please log in to access your Travel Checklist.", "error")
+        return redirect(url_for('login_form'))
+
+    default_items = [
+        'Passport', 'Travel Tickets', 'Hotel Confirmation', 
+        'Phone Charger', 'Medications', 'Toiletries', 
+        'Clothes', 'Travel Insurance', 'Wallet & Cards'
+    ]
+
+    if request.method == 'POST':
+        checked_items = request.form.getlist('item')
+        session['travel_checklist'] = checked_items
+        flash("✅ Checklist saved!", "success")
+        return redirect(url_for('travel_checklist'))
+
+    saved_items = session.get('travel_checklist', [])
+    return render_template('travel_checklist.html', items=default_items, checked_items=saved_items)
+
 
 def generate_mock_destinations(preferences):
     """Generate mock destination data based on user preferences"""
