@@ -209,19 +209,45 @@ def saved_trips():
     if 'user' not in session:
         flash("Please log in to view your saved trips.", "error")
         return redirect(url_for('login_form'))
-    
+
     user_email = session['user']
     user_name = user_email.split('@')[0]
-    
-    # Fetch the user's saved trips
+
+    # Get saved destinations and planned trips
     user_data = users.get(user_email, {})
     destinations = user_data.get('saved_trips', [])
-    
-    return render_template('saved_trips.html', user_name=user_name, destinations=destinations)
+    planned_trips = session.get('planned_trips', [])
 
-@app.route('/request_reset')
-def request_reset():
-    return render_template('reset_password.html')
+    return render_template('saved_trips.html', user_name=user_name, destinations=destinations, trips=planned_trips)
+
+
+@app.route('/plan_trip', methods=['GET', 'POST'])
+def plan_trip():
+    if request.method == 'POST':
+        destination = request.form['destination']
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+        budget = request.form['budget']
+        interests = request.form['interests']
+
+        trip = {
+            'destination': destination,
+            'start_date': start_date,
+            'end_date': end_date,
+            'budget': budget,
+            'interests': interests
+        }
+
+        # Store in session (or append if multiple trips)
+        if 'planned_trips' not in session:
+            session['planned_trips'] = []
+        session['planned_trips'].append(trip)
+
+        flash("🎉 Trip Planned Successfully!", "success")
+        return render_template('plan_trip_result.html', trip=trip)
+
+    return render_template('plan_trip.html')
+
 
 @app.route('/api/chat', methods=['POST'])
 def api_chat():

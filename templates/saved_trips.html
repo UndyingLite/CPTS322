@@ -8,24 +8,27 @@
 <body>
   <div class="container">
     <h1>Your Saved Trips</h1>
-    <p>Welcome, <span style="color: #007bff;">{{ user_name }}</span>! Here are your saved destinations.</p>
+    <p>Welcome, <span style="color: #007bff;">{{ user_name }}</span>! Here are your saved destinations and planned trips.</p>
     
     <div class="navigation-links">
       <a href="/dashboard" class="button button-secondary">⬅️ Back to Dashboard</a>
       <a href="/ai_suggestions" class="button">Find New Destinations</a>
+      <a href="/plan_trip" class="button">🗺️ Plan a New Trip</a>
     </div>
     
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
           <div class="flash {{ category }}">
-            <span class="close-btn" onclick="this.parentElement.style.display='none';">×</span>
+            <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
             {{ message }}
           </div>
         {% endfor %}
       {% endif %}
     {% endwith %}
-    
+
+    <!-- AI Suggested Destinations -->
+    <h2>🌍 Saved Destinations</h2>
     <div class="saved-trips-container">
       {% if destinations and destinations|length > 0 %}
         {% for destination in destinations %}
@@ -44,27 +47,38 @@
               <span><strong>Best time to visit:</strong> {{ destination.bestTimeToVisit }}</span>
               <span><strong>Daily budget:</strong> {{ destination.estimatedDailyBudget }}</span>
             </div>
-            
-            <button class="plan-button" onclick="planTrip('{{ destination.name }}')">Plan This Trip</button>
           </div>
         {% endfor %}
       {% else %}
         <div class="no-trips-message">
-          <p>You haven't saved any destinations yet.</p>
+          <p>No AI-suggested destinations saved yet.</p>
           <a href="/ai_suggestions" class="button">Discover Destinations</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Planned Trips Section -->
+    <h2>🗺️ Your Planned Trips</h2>
+    <div class="saved-trips-container">
+      {% if trips and trips|length > 0 %}
+        {% for trip in trips %}
+          <div class="destination-card">
+            <h3>{{ trip.destination }}</h3>
+            <p><strong>Dates:</strong> {{ trip.start_date }} to {{ trip.end_date }}</p>
+            <p><strong>Budget:</strong> ${{ trip.budget }}</p>
+            <p><strong>Interests:</strong> {{ trip.interests }}</p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="no-trips-message">
+          <p>You haven't planned any trips yet.</p>
+          <a href="/plan_trip" class="button">Start Planning</a>
         </div>
       {% endif %}
     </div>
   </div>
   
   <script>
-    function planTrip(destinationName) {
-      // In a real application, this would redirect to a trip planning page
-      // For now, we'll just show an alert
-      alert(`Planning a trip to ${destinationName}! This feature will be available soon.`);
-    }
-    
-    // Auto-dismiss flash messages after 3 seconds
     setTimeout(() => {
       document.querySelectorAll('.flash').forEach(flash => {
         flash.style.opacity = '0';

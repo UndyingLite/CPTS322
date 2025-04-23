@@ -1,0 +1,22 @@
+<!-- templates/plan_trip_result.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Trip Plan - AI Travel Buddy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Your Trip to {{ trip.destination }}</h1>
+    <p><strong>Dates:</strong> {{ trip.start_date }} to {{ trip.end_date }}</p>
+    <p><strong>Budget:</strong> ${{ trip.budget }}</p>
+    <p><strong>Interests:</strong> {{ trip.interests }}</p>
+
+    <p>✅ This trip has been saved to your <a href="/saved_trips">Saved Trips</a>.</p>
+
+    <a href="/plan_trip" class="button">➕ Plan Another Trip</a>
+    <a href="/dashboard" class="button button-secondary">🏠 Back to Dashboard</a>
+  </div>
+</body>
+</html>
