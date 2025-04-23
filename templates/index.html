@@ -3,23 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <title>AI Travel Buddy</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 100px 20px 50px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    .buttons a {
+      text-decoration: none;
+      background: #fff;
+      color: #007bff;
+      padding: 12px 25px;
+      border-radius: 30px;
+      margin: 0 10px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .buttons a:hover {
+      background: #e0e0e0;
+    }
+
+    .features {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 50px 20px;
+      flex-wrap: wrap;
+      color: #fff;
+    }
+
+    .feature {
+      max-width: 200px;
+      text-align: center;
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.1);
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-  <div class="container home-box">
-    <h1 class="title">Welcome to <span style="color: #007bff;">AI Travel Buddy</span></h1>
-    <p class="subtitle">Your smart travel companion — powered by AI</p>
-
-    <div class="button-group">
-      <a href="/register_form" class="home-button">✈️ Register</a>
-      <a href="/login_form" class="home-button">🔑 Login</a>
-    </div>
-
-    <div class="feature-highlights">
-      <p>🌍 Get AI-curated destination suggestions</p>
-      <p>🧠 Chat with your travel assistant</p>
-      <p>🧳 Save & plan upcoming trips</p>
+  <div class="hero">
+    <h1>AI Travel Buddy 🌍</h1>
+    <p>Your smart companion for personalized travel planning.</p>
+    <div class="buttons">
+      <a href="/register_form">✈️ Get Started</a>
+      <a href="/login_form">🔑 Login</a>
     </div>
   </div>
+
+  <div class="features">
+    <div class="feature">
+      <h3>🌍 Destinations</h3>
+      <p>AI-powered travel suggestions tailored to you.</p>
+    </div>
+    <div class="feature">
+      <h3>💬 Chat Assistant</h3>
+      <p>Instant answers to your travel questions.</p>
+    </div>
+    <div class="feature">
+      <h3>🧳 Save Trips</h3>
+      <p>Plan, save, and manage your dream vacations.</p>
+    </div>
+  </div>
+
+  <footer>
+    © 2024 AI Travel Buddy | <a href="https://github.com/UndyingLite/CPTS322" target="_blank" style="color: #fff;">GitHub</a>
+  </footer>
 </body>
 </html>
