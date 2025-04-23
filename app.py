@@ -75,9 +75,22 @@ def dashboard():
         flash("Please log in to view your dashboard.", "error")
         return redirect(url_for('login_form'))
 
-    user_email = session['user']
-    user_name = user_email.split('@')[0]
-    return render_template('dashboard.html', user_name=user_name)
+    email = session['user']
+
+    # Ensure user_profiles exists
+    global user_profiles
+    if 'user_profiles' not in globals():
+        user_profiles = {}
+
+    # Check if user has a saved profile name
+    user_data = user_profiles.get(email)
+    if user_data and user_data.get('name'):
+        display_name = user_data['name']
+    else:
+        display_name = email.split('@')[0]  # Default fallback
+
+    return render_template('dashboard.html', user_name=display_name)
+
 
 # Registration POST route
 @app.route('/register', methods=['POST'])

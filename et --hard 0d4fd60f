@@ -1,0 +1,89 @@
+[33m58151eea[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Update app.py
+[33mf7249fd7[m Fix: Update chat functionality and improve AI responses
+[33m98e953ac[m Fix: Update chat functionality and improve AI responses
+[33m0d4fd60f[m Apply global travel-themed background and UI enhancements
+[33m8fb0ded9[m Update homepage UI for a more professional landing page
+[33me3fe2169[m Add custom 404 error page
+[33m3ec70f98[m Add requests package to requirements
+[33me8c2a434[m Save local changes before rebase
+[33m51ea9c75[m Add Procfile for Render deployment
+[33m3726846c[m Resolved merge conflicts
+[33m936f0e7d[m Final commit
+[33mcdddd2cd[m Delete node_modules directory
+[33m48f5f3ed[m Delete __pycache__ directory
+[33me1c7041d[m Pushing code to repo
+[33mc34a48ad[m made buttons better, changed colors, better UI for each part of the pagw
+[33mf5b53c63[m changed button boxes for better visuals
+[33m0ba6b099[m changed button boxes for better visuals
+[33m0ea7f78b[m changed button boxes for better visuals
+[33m5519dbee[m changed button boxes for better visuals
+[33mff04a6f3[m changed button boxes for better visuals
+[33m918ec555[m saved_trips.html
+[33m65ec1f52[m Fix profile route and form POST handling
+[33m072d3f95[m Merge branch 'main' of https://github.com/UndyingLite/CPTS322
+[33m33dfb826[m Update app.py, register/login flow, dashboard UI improvements
+[33m7142fe73[m Update ChatInterface.js
+[33m064cefa8[m Update geminiApiService.js
+[33mc984be18[m Update sprint_backlog.md
+[33m522c00a4[m Update .env
+[33md17036ff[m Update geminiApiService.js
+[33m938e8311[m Delete templates/.env
+[33md727ad6e[m Update ChatInterface.js
+[33m48b6e028[m Update geminiApiService.js
+[33meb5d1fc0[m Update geminiApiService.js
+[33mc881bee6[m Update geminiApiService.js
+[33mb8a67f6e[m Update geminiApiService.js
+[33m95ef0cc5[m Update geminiApiService.js
+[33ma3d93aac[m Create .env
+[33m0bd0ae3e[m Update geminiApiService.js
+[33m334132dd[m Create .env
+[33m40cc0370[m Update geminiApiService.js
+[33macd6e23e[m Update sprint_backlog.md
+[33m06408f9a[m Added AI destination suggestions
+[33m9359ae2c[m Update and rename sprint1_retrospective to sprint2_retrospective
+[33mc617610e[m Update and rename sprint_1_review.md to sprint_2_review.md
+[33mfb7b3c7d[m Update product_backlog.md
+[33m7343e817[m Update product_backlog.md
+[33m17235eea[m Update sprint_backlog.md
+[33m3a4345e4[m Update sprint_backlog.md
+[33mccd5a4d5[m Added profile page and improved layout, styling, and flash messages
+[33meccf788d[m Resolved merge conflicts in app.py and finalized authentication flow
+[33ma25163e3[m Implement user auth, password reset, email confirmation, UI updates
+[33m9ce06573[m Update sprint_backlog.md
+[33m22d66250[m Update App.css
+[33mce2d275e[m Update sprint_backlog.md
+[33m9be6ad4d[m Update ChatInterface.js
+[33m0c2215e5[m Update App.js
+[33mdce1dd1d[m Created ChatInterface.js
+[33mde47e30c[m Update geminiApiService.js
+[33m85829b03[m  Front-end chat interface allows text input
+[33m891f3479[m Update app.py
+[33m30ab1c53[m Update style.css
+[33mfb0a5cfb[m Update style.css
+[33m0165aaa7[m Update sprint_report_template.md
+[33maf4f73c8[m Update product_backlog.md
+[33md630e4c8[m Update sprint_backlog.md
+[33mcf6224d1[m Merge branch 'main' of https://github.com/UndyingLite/CPTS322
+[33m65759fc3[m Update sprint1_retrospective
+[33ma2f1641e[m Initial commit: Added project files for AI Travel Buddy
+[33m4667d455[m Update geminiApiService.js
+[33mbc0f51da[m Added ai integration
+[33ma70e5382[m Update geminiApiService.js
+[33m44009f40[m Update App.css
+[33mc8d54d27[m Create DestinationSuggestion.js
+[33mb363f770[m Create geminiApiService.js
+[33mcbfa24e4[m Update sprint_report_template.md
+[33m92b0a9d3[m Update sprint_report_template.md
+[33m309a81e4[m Rename sprint_report.md to sprint_report_template.md
+[33m02676cbf[m updated sprint1_retrospective
+[33mee788202[m updated sprint_1_review.md
+[33m306b71d4[m Update sprint_report.md
+[33mdd814b00[m edit sprint_report.md
+[33m8c28f445[m edit sprint_backlog.md
+[33m593b6a6a[m Rename sprint_backlog.md to product_backlog.md
+[33mc631bb0c[m Create sprint_backlog.md
+[33m763d4379[m Add files via upload
+[33mae50b939[m Add files via upload
+[33m5df88ae0[m README.md
+[33m39c2d8e7[m README.md
+[33m3fb8afce[m README.md
