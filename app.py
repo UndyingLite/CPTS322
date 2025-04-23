@@ -1,11 +1,12 @@
-from dotenv import load_dotenv
-load_dotenv()
 from flask import Flask, request, session, render_template, redirect, url_for, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
+import requests
 import os
 import re
 
 # Load environment variables
+load_dotenv()
 
 # Flask app setup
 app = Flask(__name__)
@@ -13,6 +14,10 @@ app.secret_key = os.getenv('FLASK_SECRET_KEY', 'your_secret_key_here')
 
 
 users = {}
+
+# In-memory cache for Gemini API responses
+cache = {}
+cache_capacity = 10
 
 # Home route
 @app.route('/')
@@ -168,22 +173,44 @@ def saved_trips():
 def request_reset():
     return render_template('reset_password.html')
 
-from chat import generate
-import io, sys
-
 @app.route('/api/chat', methods=['POST'])
-def chat_api():
+def api_chat():
+    user_message = request.json['message']
+
+    # Check if the response is in the cache
+    if user_message in cache:
+        return jsonify({'response': cache[user_message]})
+
     try:
-        data = request.get_json()
-        if not data or 'user_input' not in data:
-            return jsonify({'error': {'message': 'Missing user input'}}, 400)
-        user_input = data['user_input']
-        print(f"User input in chat_api: {user_input}")
-        reply = generate(user_input)
-        return jsonify({'reply': reply})
+        # Call the Gemini API (replace with your actual API key)
+        api_key = os.environ.get('REACT_APP_GEMINI_API_KEY')
+        url = f'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro-exp-02-05:generateContent?key={api_key}'
+        headers = {'Content-Type': 'application/json'}
+        data = {
+            'contents': [{
+                'parts': [{'text': f"The user is asking for travel advice. The user says: {user_message}. Please provide a concise and easy-to-understand travel suggestion. Avoid using excessive asterisks or other special characters."}]
+            }],
+            'generationConfig': {'temperature': 0.7, 'maxOutputTokens': 1000}
+        }
+
+        response = requests.post(url, headers=headers, json=data)
+        response_json = response.json()
+
+        # Extract the response text from the Gemini API response
+        if 'candidates' in response_json:
+            response_text = response_json['candidates'][0]['content']['parts'][0]['text']
+
+            # Add the response to the cache
+            cache[user_message] = response_text
+            if len(cache) > cache_capacity:
+                cache.pop(list(cache.keys())[0])
+
+            return jsonify({'response': response_text})
+        else:
+            error_message = response_json.get('error', {}).get('message', 'Unknown error')
+            return jsonify({'error': error_message}), 500
     except Exception as e:
-        print(f"Error: {str(e)}")
-        return jsonify({'error': {'message': str(e)}}, 500)
+        return jsonify({'error': str(e)}), 500
 
 # Run server
 if __name__ == '__main__':

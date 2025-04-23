@@ -77,12 +77,7 @@ function App() {
             >
               Destinations
             </button>
-            <button 
-              onClick={() => setStep('chat')} 
-              className={step === 'chat' ? 'active' : ''}
-            >
-              Chat Assistant
-            </button>
+
             {itinerary && (
               <button 
                 onClick={() => setStep('itinerary')} 
@@ -115,14 +110,7 @@ function App() {
           <button onClick={() => setStep('destinations')}>Back to Destinations</button>
         </div>
       )}
-      {step === 'chat' && (
-        <>
-          <ChatInterface onSaveConversation={() => console.log('Conversation saved')} />
-          <div style={{ marginTop: '20px' }}>
-            <button onClick={() => setStep('destinations')}>Explore Destinations</button>
-          </div>
-        </>
-      )}
+
     </div>
   );
 }

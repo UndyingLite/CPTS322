@@ -52,6 +52,7 @@
     const saveButton = document.getElementById('saveButton');
     
     let messages = [];
+    let isLoading = false;
     
     function addMessage(text, sender) {
       messages.push({ sender, text });
@@ -70,11 +71,8 @@
     }
     
     async function sendMessage() {
-      let text = userInput.value.trim();
+      const text = userInput.value.trim();
       if (!text) return;
-
-      // Escape HTML entities to prevent XSS
-      text = text.replace(/</g, "<").replace(/>/g, ">");
       
       userInput.value = '';
       addMessage(text, 'user');
@@ -87,15 +85,16 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ user_input: text })
+          body: JSON.stringify({ message: text })
         });
         
         if (!response.ok) {
+          const errorData = await response.json();
           throw new Error('Failed to get response');
         }
         
         const data = await response.json();
-        addMessage(data.reply, 'bot');
+        addMessage(data.response, 'bot');
       } catch (error) {
         console.error('Error:', error);
         addMessage('Sorry, I encountered an error. Please try again.', 'bot');
