@@ -33,7 +33,7 @@ function DestinationSuggestion({ onSelectDestination }) {
       // Try to use the Gemini API
       try {
         // Call the Gemini API
-        result = await geminiApiService.getDestinationSuggestions(preferences);
+        result = await geminiApiService.getDestinationRecommendations(preferences);
         console.log("Gemini API result:", result);
       } catch (apiError) {
         console.error("Gemini API error:", apiError);

@@ -49,17 +49,76 @@ const geminiApiService = {
       2. A brief description (2-3 sentences)
       3. 3 key attractions
       4. Best time to visit
-      5. Estimated daily budget in USD`;
+      5. Estimated daily budget in USD
+      
+      IMPORTANT: Your response MUST be a valid JSON object with EXACTLY this structure and nothing else:
+      {
+          "destinations": [
+              {
+                  "name": "Destination Name",
+                  "description": "Description text",
+                  "attractions": ["Attraction 1", "Attraction 2", "Attraction 3"],
+                  "bestTimeToVisit": "Best time info",
+                  "estimatedDailyBudget": "Budget range"
+              }
+          ]
+      }
+      
+      Do not include any markdown formatting, code blocks, or explanatory text. Return ONLY the JSON object.`;
 
       const result = await model.generateContent(prompt);
       const responseText = result.response.text();
 
       try {
-        const parsedData = JSON.parse(responseText);
-        return parsedData;
+        // Clean up the response text to extract just the JSON part
+        // Remove any markdown code block indicators
+        let cleanedText = responseText.replace(/```json|```/g, '').trim();
+        
+        // Try to parse as JSON
+        try {
+          const parsedData = JSON.parse(cleanedText);
+          
+          // Validate the structure
+          if (!parsedData.destinations || !Array.isArray(parsedData.destinations)) {
+            throw new Error("Invalid JSON structure: missing destinations array");
+          }
+          
+          // Ensure each destination has the required fields
+          parsedData.destinations.forEach(dest => {
+            const requiredFields = ['name', 'description', 'attractions', 'bestTimeToVisit', 'estimatedDailyBudget'];
+            requiredFields.forEach(field => {
+              if (!dest[field]) {
+                dest[field] = field !== 'attractions' ? "Not specified" : ["Not specified"];
+              }
+            });
+            
+            // Ensure attractions is a list
+            if (!Array.isArray(dest.attractions)) {
+              dest.attractions = [dest.attractions];
+            }
+          });
+          
+          return parsedData;
+        } catch (jsonError) {
+          console.error('Error parsing cleaned JSON:', jsonError);
+          
+          // Try to extract JSON using regex if there's extra text
+          const jsonMatch = cleanedText.match(/({[\s\S]*})/);
+          if (jsonMatch) {
+            try {
+              const extractedJson = jsonMatch[1];
+              return JSON.parse(extractedJson);
+            } catch (regexError) {
+              console.error('Error parsing extracted JSON:', regexError);
+            }
+          }
+          
+          throw new Error('Failed to parse JSON response from Gemini');
+        }
       } catch (error) {
-        console.error('Error parsing JSON response:', error);
-        throw new Error('Failed to parse JSON response from Gemini');
+        console.error('Error processing JSON response:', error);
+        console.error('Raw response:', responseText);
+        throw new Error('Failed to process JSON response from Gemini');
       }
     } catch (error) {
       console.error('Error in getDestinationRecommendations:', error);

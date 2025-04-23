@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 import os
 import re
+import json
 import google.generativeai as genai
 from dotenv import load_dotenv
 
@@ -227,6 +228,258 @@ def save_conversation():
     # In a real application, you would save the messages to a database
     print("Saving conversation:", messages)
     return jsonify({'status': 'success', 'message': 'Conversation saved successfully!'})
+
+@app.route('/api/destination_suggestions', methods=['POST'])
+def destination_suggestions_api():
+    if 'user' not in session:
+        return jsonify({'error': 'Authentication required'}), 401
+    
+    # Get form data from request
+    data = request.json
+    
+    try:
+        # Configure the Gemini API
+        GOOGLE_API_KEY = os.environ.get("GEMINI_API_KEY")
+        genai.configure(api_key=GOOGLE_API_KEY)
+        model = genai.GenerativeModel('gemini-2.0-flash')
+        
+        # Create prompt based on user preferences
+        prompt = f"""Suggest 3 travel destinations based on the following preferences:
+        - Budget: {data.get('budget', 'Any')}
+        - Trip Duration: {data.get('duration', 'Any')} days
+        - Interests: {data.get('interests', 'General travel')}
+        - Climate: {data.get('climate', 'Any')}
+        - Travel Style: {data.get('travelStyle', 'Any')}
+        - Previously visited: {data.get('previousDestinations', 'None')}
+        
+        For each destination, provide:
+        1. Name of the destination
+        2. A brief description (2-3 sentences)
+        3. 3 key attractions
+        4. Best time to visit
+        5. Estimated daily budget in USD
+        
+        IMPORTANT: Your response MUST be a valid JSON object with EXACTLY this structure and nothing else:
+        {{
+            "destinations": [
+                {{
+                    "name": "Destination Name",
+                    "description": "Description text",
+                    "attractions": ["Attraction 1", "Attraction 2", "Attraction 3"],
+                    "bestTimeToVisit": "Best time info",
+                    "estimatedDailyBudget": "Budget range"
+                }}
+            ]
+        }}
+        
+        Do not include any markdown formatting, code blocks, or explanatory text. Return ONLY the JSON object.
+        """
+        
+        try:
+            response = model.generate_content(prompt)
+            response_text = response.text
+            
+            # Clean up the response text to extract just the JSON part
+            # Remove any markdown code block indicators
+            response_text = response_text.replace('```json', '').replace('```', '')
+            
+            # Remove any leading/trailing whitespace
+            response_text = response_text.strip()
+            
+            # Try to parse as JSON
+            try:
+                result = json.loads(response_text)
+                
+                # Validate the structure
+                if 'destinations' not in result or not isinstance(result['destinations'], list):
+                    raise ValueError("Invalid JSON structure: missing 'destinations' array")
+                
+                # Ensure each destination has the required fields
+                for dest in result['destinations']:
+                    required_fields = ['name', 'description', 'attractions', 'bestTimeToVisit', 'estimatedDailyBudget']
+                    for field in required_fields:
+                        if field not in dest:
+                            dest[field] = "Not specified" if field != 'attractions' else ["Not specified"]
+                    
+                    # Ensure attractions is a list
+                    if not isinstance(dest['attractions'], list):
+                        dest['attractions'] = [dest['attractions']]
+                
+                return jsonify(result)
+            except json.JSONDecodeError as json_error:
+                print(f"Invalid JSON from API: {str(json_error)}")
+                print(f"Response text: {response_text}")
+                
+                # Try to extract JSON using regex if there's extra text
+                import re
+                json_match = re.search(r'({[\s\S]*})', response_text)
+                if json_match:
+                    try:
+                        extracted_json = json_match.group(1)
+                        result = json.loads(extracted_json)
+                        return jsonify(result)
+                    except:
+                        pass
+                
+                # Generate mock data as fallback
+                mock_destinations = generate_mock_destinations(data)
+                print("USING FALLBACK MOCK DATA - NOT GEMINI API RESPONSE")
+                return jsonify({"destinations": mock_destinations})
+                
+        except Exception as gemini_error:
+            print(f"Gemini API error: {str(gemini_error)}")
+            # Generate mock data as fallback
+            mock_destinations = generate_mock_destinations(data)
+            print("USING FALLBACK MOCK DATA - NOT GEMINI API RESPONSE")
+            return jsonify({"destinations": mock_destinations})
+            
+    except Exception as e:
+        print(f"Error in destination suggestions: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/save_destination', methods=['POST'])
+def save_destination():
+    if 'user' not in session:
+        return jsonify({'error': 'Authentication required'}), 401
+    
+    destination_data = request.json
+    user_email = session['user']
+    
+    # In a real application, you would save this to a database
+    # For now, we'll just print it
+    print(f"Saving destination for user {user_email}:", destination_data)
+    
+    return jsonify({
+        'status': 'success', 
+        'message': 'Destination saved successfully!'
+    })
+
+def generate_mock_destinations(preferences):
+    """Generate mock destination data based on user preferences"""
+    # Destination options based on preferences
+    destination_options = {
+        'Budget': ['Thailand', 'Vietnam', 'Mexico', 'Portugal', 'Turkey'],
+        'Moderate': ['Spain', 'Greece', 'Japan', 'Australia', 'Canada'],
+        'Luxury': ['Maldives', 'Switzerland', 'Dubai', 'French Polynesia', 'Singapore'],
+        'Tropical': ['Bali', 'Hawaii', 'Costa Rica', 'Fiji', 'Caribbean Islands'],
+        'Mediterranean': ['Italy', 'Greece', 'Spain', 'Croatia', 'Portugal'],
+        'Desert': ['Morocco', 'Egypt', 'Jordan', 'Arizona', 'Dubai'],
+        'Alpine': ['Switzerland', 'Austria', 'Canada', 'New Zealand', 'Norway'],
+        'Temperate': ['Japan', 'UK', 'France', 'Germany', 'Netherlands'],
+        'Adventure': ['New Zealand', 'Costa Rica', 'Iceland', 'Peru', 'Nepal'],
+        'Cultural': ['Japan', 'Italy', 'France', 'India', 'Egypt'],
+        'Relaxation': ['Maldives', 'Bali', 'Hawaii', 'Thailand', 'Greece'],
+        'Urban': ['New York', 'Tokyo', 'London', 'Paris', 'Singapore'],
+        'Family': ['Orlando', 'San Diego', 'London', 'Singapore', 'Australia']
+    }
+    
+    # Select destinations based on preferences
+    selected_destinations = []
+    
+    # Budget preference
+    if preferences.get('budget') in destination_options:
+        selected_destinations.extend(destination_options[preferences.get('budget')])
+    
+    # Climate preference
+    if preferences.get('climate') in destination_options:
+        selected_destinations.extend(destination_options[preferences.get('climate')])
+    
+    # Travel style preference
+    if preferences.get('travelStyle') in destination_options:
+        selected_destinations.extend(destination_options[preferences.get('travelStyle')])
+    
+    # If no matches or no preferences, use defaults
+    if not selected_destinations:
+        selected_destinations = ['Paris, France', 'Tokyo, Japan', 'Bali, Indonesia', 'New York City, USA', 'Barcelona, Spain']
+    
+    # Remove duplicates
+    selected_destinations = list(set(selected_destinations))
+    
+    # Filter out previously visited places
+    if preferences.get('previousDestinations'):
+        visited_places = [place.strip().lower() for place in preferences.get('previousDestinations').split(',')]
+        selected_destinations = [dest for dest in selected_destinations 
+                               if not any(visited in dest.lower() for visited in visited_places)]
+    
+    # Ensure we have at least 3 destinations
+    while len(selected_destinations) < 3:
+        defaults = ['London, UK', 'Rome, Italy', 'Sydney, Australia', 'Cape Town, South Africa']
+        for dest in defaults:
+            if dest not in selected_destinations:
+                selected_destinations.append(dest)
+                break
+    
+    # Take only 3 destinations
+    selected_destinations = selected_destinations[:3]
+    
+    # Destination details
+    destination_details = {
+        'Thailand': {
+            'name': 'Thailand',
+            'description': 'A tropical paradise with stunning beaches, ornate temples, and vibrant street life. Thailand offers a perfect blend of cultural experiences and natural beauty.',
+            'attractions': ['Grand Palace in Bangkok', 'Phi Phi Islands', 'Chiang Mai Night Markets'],
+            'bestTimeToVisit': 'November to March (dry season)',
+            'estimatedDailyBudget': '$30-$100'
+        },
+        'Japan': {
+            'name': 'Japan',
+            'description': 'A fascinating blend of ancient traditions and cutting-edge technology. Japan offers incredible food, beautiful landscapes, and rich cultural experiences.',
+            'attractions': ['Mount Fuji', 'Kyoto Temples', 'Tokyo Skytree'],
+            'bestTimeToVisit': 'March-May (cherry blossoms) or Oct-Nov (fall colors)',
+            'estimatedDailyBudget': '$100-$200'
+        },
+        'Italy': {
+            'name': 'Italy',
+            'description': 'Home to incredible history, art, and some of the world\'s best food and wine. Italy offers a perfect mix of cultural sites and beautiful landscapes.',
+            'attractions': ['Colosseum in Rome', 'Venice Canals', 'Florence Cathedral'],
+            'bestTimeToVisit': 'April to June or September to October',
+            'estimatedDailyBudget': '$70-$150'
+        },
+        'New Zealand': {
+            'name': 'New Zealand',
+            'description': 'Known for dramatic landscapes, outdoor adventures, and Maori culture. New Zealand is a paradise for nature lovers and adventure seekers.',
+            'attractions': ['Milford Sound', 'Hobbiton Movie Set', 'Rotorua Geothermal Area'],
+            'bestTimeToVisit': 'December to February (summer)',
+            'estimatedDailyBudget': '$80-$180'
+        },
+        'Morocco': {
+            'name': 'Morocco',
+            'description': 'A colorful country with bustling markets, desert landscapes, and rich cultural heritage. Morocco offers a unique blend of African, Arab, and European influences.',
+            'attractions': ['Marrakech Medina', 'Sahara Desert', 'Blue City of Chefchaouen'],
+            'bestTimeToVisit': 'March to May or September to November',
+            'estimatedDailyBudget': '$40-$100'
+        }
+    }
+    
+    # Create result with full details
+    result = []
+    for destination in selected_destinations:
+        # Find the closest match in our details dictionary
+        best_match = None
+        for key in destination_details:
+            if key in destination:
+                best_match = key
+                break
+        
+        if best_match:
+            result.append(destination_details[best_match])
+        else:
+            # Create generic entry if no match found
+            budget_estimate = "$50-$100"
+            if preferences.get('budget') == 'Moderate':
+                budget_estimate = "$100-$200"
+            elif preferences.get('budget') == 'Luxury':
+                budget_estimate = "$200+"
+                
+            result.append({
+                'name': destination,
+                'description': f'A wonderful destination with plenty to see and do. {destination} offers unique experiences and unforgettable memories.',
+                'attractions': ['Local sightseeing', 'Cultural experiences', 'Regional cuisine'],
+                'bestTimeToVisit': 'Varies by season',
+                'estimatedDailyBudget': budget_estimate
+            })
+    
+    return result
 
 @app.errorhandler(404)
 def page_not_found(e):
