@@ -1,25 +1,22 @@
-/* Import a Google Font */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
-
-/* Base Page Setup */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Open Sans', sans-serif;
-  background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') no-repeat center center fixed;
+  background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
   background-size: cover;
   color: #333;
 }
 
-/* General Container */
-.container {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 8px;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+/* Overlay Container for All Pages */
+.overlay-container {
+  max-width: 500px;
+  margin: 80px auto;
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  text-align: center;
 }
 
 /* Dashboard Container */
