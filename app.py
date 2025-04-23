@@ -1,9 +1,10 @@
 from flask import Flask, request, session, render_template, redirect, url_for, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
-import requests
 import os
 import re
+import google.generativeai as genai
+from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
@@ -196,42 +197,30 @@ def request_reset():
 @app.route('/api/chat', methods=['POST'])
 def api_chat():
     user_message = request.json['message']
-
-    # Check if the response is in the cache
-    if user_message in cache:
-        return jsonify({'response': cache[user_message]})
+    
+    if 'first_message' not in session:
+        session['first_message'] = True
+        greeting = " Greet the user with a friendly hello and ask if they need help with any travel related questions."
+    else:
+        greeting = ""
 
     try:
-        # Call the Gemini API (replace with your actual API key)
-        api_key = os.environ.get('REACT_APP_GEMINI_API_KEY')
-        url = f'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro-exp-02-05:generateContent?key={api_key}'
-        headers = {'Content-Type': 'application/json'}
-        data = {
-            'contents': [{
-                'parts': [{'text': f"The user is asking for travel advice. The user says: {user_message}. Please provide a concise and easy-to-understand travel suggestion. Avoid using excessive asterisks or other special characters."}]
-            }],
-            'generationConfig': {'temperature': 0.7, 'maxOutputTokens': 1000}
-        }
+        # Configure the Gemini API
+        GOOGLE_API_KEY = os.environ.get("GEMINI_API_KEY")
+        genai.configure(api_key=GOOGLE_API_KEY)
+        model = genai.GenerativeModel('gemini-2.0-flash')
 
-        response = requests.post(url, headers=headers, json=data)
-        response_json = response.json()
+        prompt = f"You are an AI travel buddy bot within a travel app.{greeting} The user is asking for travel advice. The user says: {user_message}. Please provide a very short quick and helpful travel suggestion or provide a long response of less than 150 words when needed referencing previous parts of the conversation if relevant. Do not start your response with the same word as the previous response."
+        try:
+            response = model.generate_content(prompt)
+            response_text = response.text
+        except Exception as gemini_error:
+            return jsonify({'error': f"Gemini API error: {str(gemini_error)}"}), 500
 
-        # Extract the response text from the Gemini API response
-        if 'candidates' in response_json:
-            response_text = response_json['candidates'][0]['content']['parts'][0]['text']
-
-            # Add the response to the cache
-            cache[user_message] = response_text
-            if len(cache) > cache_capacity:
-                cache.pop(list(cache.keys())[0])
-
-            return jsonify({'response': response_text})
-        else:
-            error_message = response_json.get('error', {}).get('message', 'Unknown error')
-            return jsonify({'error': error_message}), 500
+        return jsonify({'response': response_text})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404

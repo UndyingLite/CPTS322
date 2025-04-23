@@ -4,7 +4,7 @@ import ProfileForm from './components/ProfileForm';
 import PreferencesForm from './components/PreferencesForm';
 import ItineraryDisplay from './components/ItineraryDisplay';
 import geminiApiService from './services/geminiApiService';
-import ChatInterface from './components/ChatInterface';
+
 import DestinationSuggestion from './components/DestinationSuggestion';
 
 
