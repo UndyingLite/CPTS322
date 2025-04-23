@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment Variables
+.env
+
+# System Files
+.DS_Store
+
+# VSCode settings
+.vscode/
+
+# Logs
+*.log
