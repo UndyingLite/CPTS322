@@ -4,8 +4,7 @@ from dotenv import load_dotenv
 import os
 import re
 import json
-import google.generativeai as genai
-from dotenv import load_dotenv
+import google.generativeai as genai 
 
 # Load environment variables
 load_dotenv()
@@ -14,12 +13,15 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'your_secret_key_here')
 
-
+# In-memory user storage with saved trips
 users = {}
 
 # In-memory cache for Gemini API responses
 cache = {}
 cache_capacity = 10
+
+# In-memory profile store
+user_profiles = {}
 
 # Home route
 @app.route('/')
@@ -49,7 +51,7 @@ def login():
     if email not in users:
         flash("User not found.", "error")
         return redirect(url_for('login_form'))
-    if not check_password_hash(users[email], password):
+    if not check_password_hash(users[email]['password'], password):
         flash("Invalid password.", "error")
         return redirect(url_for('login_form'))
 
@@ -113,25 +115,38 @@ def register():
         flash("User already exists.", "error")
         return redirect(url_for('register_form'))
 
-    users[email] = generate_password_hash(password)
+    # Store user data with password and empty saved_trips list
+    users[email] = {
+        'password': generate_password_hash(password),
+        'saved_trips': []
+    }
     flash("Registration successful! You can now log in.", "success")
     return redirect(url_for('login_form'))
-
-
 
 @app.route('/ai_suggestions')
 def ai_suggestions():
     if 'user' not in session:
         flash("Please log in to access Destination Suggestions.", "error")
         return redirect(url_for('login_form'))
-    return render_template('destination_suggestions.html')
+    
+    user_email = session['user']
+    user_name = user_email.split('@')[0]
+    
+    # Fetch user profile for default interests
+    user_data = user_profiles.get(user_email, {})
+    profile_data = {'interests': user_data.get('interests', '')}
+    
+    return render_template('destination_suggestions.html', user_name=user_name, profile=profile_data)
 
 @app.route('/chat')
 def chat():
     if 'user' not in session:
         flash("Please log in to access the Travel Chat Assistant.", "error")
         return redirect(url_for('login_form'))
-    return render_template('chat.html')
+    
+    user_email = session['user']
+    user_name = user_email.split('@')[0]
+    return render_template('chat.html', user_name=user_name)
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -140,11 +155,7 @@ def profile():
         return redirect(url_for('login_form'))
 
     email = session['user']
-
-    # Mock profile store (add this at the top if you haven't already)
-    global user_profiles
-    if 'user_profiles' not in globals():
-        user_profiles = {}
+    user_name = email.split('@')[0]
 
     if request.method == 'POST':
         name = request.form.get('name')
@@ -161,7 +172,7 @@ def profile():
         return redirect(url_for('profile'))
 
     user_data = user_profiles.get(email, {})
-    return render_template('profile.html', user_data=user_data)
+    return render_template('profile.html', user_name=user_name, user_data=user_data)
 
 @app.route('/reset_password', methods=['POST'])
 def reset_password():
@@ -176,20 +187,24 @@ def reset_password():
         flash("Email not found. Please register first.", "error")
         return redirect(url_for('request_reset'))
 
-    users[email] = generate_password_hash(new_password)
+    users[email]['password'] = generate_password_hash(new_password)
     flash("Password reset successfully. You can now log in.", "success")
     return redirect(url_for('login_form'))
-
-
-
-
 
 @app.route('/saved_trips')
 def saved_trips():
     if 'user' not in session:
         flash("Please log in to view your saved trips.", "error")
         return redirect(url_for('login_form'))
-    return render_template('saved_trips.html')
+    
+    user_email = session['user']
+    user_name = user_email.split('@')[0]
+    
+    # Fetch the user's saved trips
+    user_data = users.get(user_email, {})
+    destinations = user_data.get('saved_trips', [])
+    
+    return render_template('saved_trips.html', user_name=user_name, destinations=destinations)
 
 @app.route('/request_reset')
 def request_reset():
@@ -280,10 +295,7 @@ def destination_suggestions_api():
             response_text = response.text
             
             # Clean up the response text to extract just the JSON part
-            # Remove any markdown code block indicators
             response_text = response_text.replace('```json', '').replace('```', '')
-            
-            # Remove any leading/trailing whitespace
             response_text = response_text.strip()
             
             # Try to parse as JSON
@@ -345,9 +357,15 @@ def save_destination():
     destination_data = request.json
     user_email = session['user']
     
-    # In a real application, you would save this to a database
-    # For now, we'll just print it
-    print(f"Saving destination for user {user_email}:", destination_data)
+    # Ensure the user exists and has a saved_trips list
+    if user_email not in users or 'saved_trips' not in users[user_email]:
+        users[user_email] = {
+            'password': users.get(user_email, {}).get('password', ''),
+            'saved_trips': []
+        }
+    
+    # Add the destination to the user's saved_trips list
+    users[user_email]['saved_trips'].append(destination_data)
     
     return jsonify({
         'status': 'success', 
@@ -356,7 +374,6 @@ def save_destination():
 
 def generate_mock_destinations(preferences):
     """Generate mock destination data based on user preferences"""
-    # Destination options based on preferences
     destination_options = {
         'Budget': ['Thailand', 'Vietnam', 'Mexico', 'Portugal', 'Turkey'],
         'Moderate': ['Spain', 'Greece', 'Japan', 'Australia', 'Canada'],
@@ -373,35 +390,27 @@ def generate_mock_destinations(preferences):
         'Family': ['Orlando', 'San Diego', 'London', 'Singapore', 'Australia']
     }
     
-    # Select destinations based on preferences
     selected_destinations = []
     
-    # Budget preference
     if preferences.get('budget') in destination_options:
         selected_destinations.extend(destination_options[preferences.get('budget')])
     
-    # Climate preference
     if preferences.get('climate') in destination_options:
         selected_destinations.extend(destination_options[preferences.get('climate')])
     
-    # Travel style preference
     if preferences.get('travelStyle') in destination_options:
         selected_destinations.extend(destination_options[preferences.get('travelStyle')])
     
-    # If no matches or no preferences, use defaults
     if not selected_destinations:
         selected_destinations = ['Paris, France', 'Tokyo, Japan', 'Bali, Indonesia', 'New York City, USA', 'Barcelona, Spain']
     
-    # Remove duplicates
     selected_destinations = list(set(selected_destinations))
     
-    # Filter out previously visited places
     if preferences.get('previousDestinations'):
         visited_places = [place.strip().lower() for place in preferences.get('previousDestinations').split(',')]
         selected_destinations = [dest for dest in selected_destinations 
                                if not any(visited in dest.lower() for visited in visited_places)]
     
-    # Ensure we have at least 3 destinations
     while len(selected_destinations) < 3:
         defaults = ['London, UK', 'Rome, Italy', 'Sydney, Australia', 'Cape Town, South Africa']
         for dest in defaults:
@@ -409,10 +418,8 @@ def generate_mock_destinations(preferences):
                 selected_destinations.append(dest)
                 break
     
-    # Take only 3 destinations
     selected_destinations = selected_destinations[:3]
     
-    # Destination details
     destination_details = {
         'Thailand': {
             'name': 'Thailand',
@@ -451,10 +458,8 @@ def generate_mock_destinations(preferences):
         }
     }
     
-    # Create result with full details
     result = []
     for destination in selected_destinations:
-        # Find the closest match in our details dictionary
         best_match = None
         for key in destination_details:
             if key in destination:
@@ -464,7 +469,6 @@ def generate_mock_destinations(preferences):
         if best_match:
             result.append(destination_details[best_match])
         else:
-            # Create generic entry if no match found
             budget_estimate = "$50-$100"
             if preferences.get('budget') == 'Moderate':
                 budget_estimate = "$100-$200"
