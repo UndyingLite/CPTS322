@@ -28,55 +28,75 @@
     {% endwith %}
 
     <!-- AI Suggested Destinations -->
-    <h2>🌍 Saved Destinations</h2>
-    <div class="saved-trips-container">
-      {% if destinations and destinations|length > 0 %}
-        {% for destination in destinations %}
-          <div class="destination-card">
-            <h3>{{ destination.name }}</h3>
-            <p>{{ destination.description }}</p>
-            
-            <h4>Key Attractions:</h4>
-            <ul class="attractions-list">
-              {% for attraction in destination.attractions %}
-                <li>{{ attraction }}</li>
-              {% endfor %}
-            </ul>
-            
-            <div class="destination-meta">
-              <span><strong>Best time to visit:</strong> {{ destination.bestTimeToVisit }}</span>
-              <span><strong>Daily budget:</strong> {{ destination.estimatedDailyBudget }}</span>
-            </div>
-          </div>
-        {% endfor %}
-      {% else %}
-        <div class="no-trips-message">
-          <p>No AI-suggested destinations saved yet.</p>
-          <a href="/ai_suggestions" class="button">Discover Destinations</a>
-        </div>
-      {% endif %}
-    </div>
+<h2>🌍 Saved Destinations</h2>
+<div class="saved-trips-container">
+  {% if destinations and destinations|length > 0 %}
+    {% for destination in destinations %}
+      <div class="destination-card">
+        <h3>{{ destination.name }}</h3>
+        <p>{{ destination.description }}</p>
 
-    <!-- Planned Trips Section -->
-    <h2>🗺️ Your Planned Trips</h2>
-    <div class="saved-trips-container">
-      {% if trips and trips|length > 0 %}
-        {% for trip in trips %}
-          <div class="destination-card">
-            <h3>{{ trip.destination }}</h3>
-            <p><strong>Dates:</strong> {{ trip.start_date }} to {{ trip.end_date }}</p>
-            <p><strong>Budget:</strong> ${{ trip.budget }}</p>
-            <p><strong>Interests:</strong> {{ trip.interests }}</p>
-          </div>
-        {% endfor %}
-      {% else %}
-        <div class="no-trips-message">
-          <p>You haven't planned any trips yet.</p>
-          <a href="/plan_trip" class="button">Start Planning</a>
+        <h4>Key Attractions:</h4>
+        <ul class="attractions-list">
+          {% for attraction in destination.attractions %}
+            <li>{{ attraction }}</li>
+          {% endfor %}
+        </ul>
+
+        <div class="destination-meta">
+          <span><strong>Best time to visit:</strong> {{ destination.bestTimeToVisit }}</span>
+          <span><strong>Daily budget:</strong> {{ destination.estimatedDailyBudget }}</span>
         </div>
-      {% endif %}
+
+        {% if weather_data[destination.name] %}
+          <div class="weather-info">
+            <h4>🌤️ Current Weather</h4>
+            <p>
+              <img src="http://openweathermap.org/img/wn/{{ weather_data[destination.name].icon }}@2x.png" alt="Weather Icon">
+              {{ weather_data[destination.name].description }}, {{ weather_data[destination.name].temp }}°C
+            </p>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="no-trips-message">
+      <p>No AI-suggested destinations saved yet.</p>
+      <a href="/ai_suggestions" class="button">Discover Destinations</a>
     </div>
-  </div>
+  {% endif %}
+</div>
+
+<!-- Planned Trips Section -->
+<h2>🗺️ Your Planned Trips</h2>
+<div class="saved-trips-container">
+  {% if trips and trips|length > 0 %}
+    {% for trip in trips %}
+      <div class="destination-card">
+        <h3>{{ trip.destination }}</h3>
+        <p><strong>Dates:</strong> {{ trip.start_date }} to {{ trip.end_date }}</p>
+        <p><strong>Budget:</strong> ${{ trip.budget }}</p>
+        <p><strong>Interests:</strong> {{ trip.interests }}</p>
+
+        {% if weather_data[trip.destination] %}
+          <div class="weather-info">
+            <h4>🌦️ Current Weather</h4>
+            <p>
+              <img src="http://openweathermap.org/img/wn/{{ weather_data[trip.destination].icon }}@2x.png" alt="Weather Icon">
+              {{ weather_data[trip.destination].description }}, {{ weather_data[trip.destination].temp }}°C
+            </p>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="no-trips-message">
+      <p>You haven't planned any trips yet.</p>
+      <a href="/plan_trip" class="button">Start Planning</a>
+    </div>
+  {% endif %}
+</div>
+</div>
   
   <script>
     setTimeout(() => {

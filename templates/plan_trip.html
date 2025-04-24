@@ -1,17 +1,32 @@
-<!-- templates/plan_trip.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Plan a Trip - AI Travel Buddy</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+      .weather-preview {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        display: none;
+        text-align: center;
+      }
+    </style>
 </head>
 <body>
   <div class="container">
     <h1>🗺️ Plan Your Trip</h1>
     <form method="POST">
       <label for="destination">Destination:</label>
-      <input type="text" name="destination" required>
+      <input type="text" name="destination" id="destination" required onblur="fetchWeather()">
+
+      <div id="weatherBox" class="weather-preview">
+        <h3>🌤️ Current Weather</h3>
+        <p id="weatherDetails">Fetching weather...</p>
+      </div>
 
       <label for="start_date">Start Date:</label>
       <input type="date" name="start_date" required>
@@ -30,5 +45,29 @@
 
     <p><a href="/dashboard" class="button button-secondary">⬅️ Back to Dashboard</a></p>
   </div>
+
+  <script>
+    function fetchWeather() {
+      const city = document.getElementById('destination').value;
+      if (!city) return;
+
+      fetch(`/api/get_weather?city=${city}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            document.getElementById('weatherDetails').innerText = "Weather data not available.";
+          } else {
+            document.getElementById('weatherBox').style.display = 'block';
+            document.getElementById('weatherDetails').innerHTML = `
+              <img src="http://openweathermap.org/img/wn/${data.icon}@2x.png" alt="Weather Icon">
+              ${data.description}, ${data.temp}°C
+            `;
+          }
+        })
+        .catch(err => {
+          document.getElementById('weatherDetails').innerText = "Error fetching weather.";
+        });
+    }
+  </script>
 </body>
 </html>

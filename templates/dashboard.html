@@ -131,8 +131,19 @@
   <div class="dashboard-wrapper">
     <div class="dashboard-box">
       <h1>Welcome, <span style="color: #007bff;">{{ user_name }}</span> 👋</h1>
-      <p>Select a feature to get started:</p>
+    
+      {% if weather %}
+  <div style="margin-bottom: 20px;">
+    <h3>🌤️ Current Weather in {{ default_city }}</h3>
+    <p>
+      <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="Weather Icon">
+      {{ weather.description }}, {{ weather.temp }}°C
+    </p>
+  </div>
+{% endif %}
 
+      <p>Select a feature to get started:</p>
+    
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
           {% for category, message in messages %}
@@ -143,7 +154,7 @@
           {% endfor %}
         {% endif %}
       {% endwith %}
-
+    
       <div class="dashboard-grid">
         <a href="/ai_suggestions" class="dashboard-button">🌍 Destination Suggestions</a>
         <a href="/chat" class="dashboard-button">💬 Travel Chat Assistant</a>
@@ -155,7 +166,7 @@
         <a href="/logout" class="dashboard-button logout">🚪 Logout</a>
       </div>
     </div>
-  </div>
+    
 
   <script>
     setTimeout(() => {

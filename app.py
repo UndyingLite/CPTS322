@@ -5,7 +5,7 @@ import os
 import re
 import json
 import google.generativeai as genai 
-
+import requests
 # Load environment variables
 load_dotenv()
 
@@ -27,6 +27,38 @@ user_profiles = {}
 @app.route('/')
 def home():
     return render_template('index.html')
+
+
+def get_weather(city):
+    api_key = os.getenv("WEATHER_API_KEY")
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=imperial"
+
+    try:
+        response = requests.get(url)
+        data = response.json()
+        if response.status_code == 200:
+            weather = {
+                'description': data['weather'][0]['description'].title(),
+                'temp': data['main']['temp'],
+                'icon': data['weather'][0]['icon']
+            }
+            return weather
+    except Exception as e:
+        print(f"Weather error for {city}: {e}")
+    return None
+
+@app.route('/api/get_weather')
+def api_get_weather():
+    city = request.args.get('city')
+    if not city:
+        return jsonify({'error': 'City is required'}), 400
+
+    weather = get_weather(city)
+    if weather:
+        return jsonify(weather)
+    else:
+        return jsonify({'error': 'Weather data not found'}), 404
+
 
 # Registration page
 @app.route('/register_form')
@@ -80,19 +112,23 @@ def dashboard():
 
     email = session['user']
 
-    # Ensure user_profiles exists
     global user_profiles
     if 'user_profiles' not in globals():
         user_profiles = {}
 
-    # Check if user has a saved profile name
     user_data = user_profiles.get(email)
     if user_data and user_data.get('name'):
         display_name = user_data['name']
     else:
-        display_name = email.split('@')[0]  # Default fallback
+        display_name = email.split('@')[0]
 
-    return render_template('dashboard.html', user_name=display_name)
+    # Set Pullman as default city
+    default_city = "Pullman"
+    weather = get_weather(default_city)
+
+    return render_template('dashboard.html', user_name=display_name, weather=weather, default_city=default_city)
+
+
 
 
 # Registration POST route
@@ -213,12 +249,23 @@ def saved_trips():
     user_email = session['user']
     user_name = user_email.split('@')[0]
 
-    # Get saved destinations and planned trips
     user_data = users.get(user_email, {})
     destinations = user_data.get('saved_trips', [])
     planned_trips = session.get('planned_trips', [])
 
-    return render_template('saved_trips.html', user_name=user_name, destinations=destinations, trips=planned_trips)
+    # Prepare weather data
+    weather_data = {}
+
+    for dest in destinations:
+        city_name = dest.get('name')
+        weather_data[city_name] = get_weather(city_name)
+
+    for trip in planned_trips:
+        city_name = trip.get('destination')
+        weather_data[city_name] = get_weather(city_name)
+
+    return render_template('saved_trips.html', user_name=user_name, destinations=destinations, trips=planned_trips, weather_data=weather_data)
+
 
 
 @app.route('/plan_trip', methods=['GET', 'POST'])
